@@ -17,6 +17,9 @@ export COLOR_YELLOW='\e[1;33m'
 export COLOR_GRAY='\e[0;30m'
 export COLOR_LIGHT_GRAY='\e[0;37m'
 
+# source environment vars
+source ~/.env_vars.sh
+
 # pretty command prompt
 export PS1="$COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
 
@@ -26,8 +29,27 @@ export PRET=~/Projects
 # ant options from https://wiki.corp.code42.com/index.php/Development_Quickstart
 export ANT_OPTS="-Xmx1024m -Xms512m"
 
+##################
+# define functions
+
 # redo the last command as sudo
 alias fuck='sudo $(history -p !!)'
+
+# function to count lines of code in a directory, excluding node_modules or
+# public/libs
+function sloc() {
+	find . -path ./node_modules -prune -o \
+			-path ./public/lib -prune -o \
+			-path ./public/libs -prune -o \
+			-path ./*/lib -prune -o \
+			-path ./*/dist -prune -o \
+			-name '*.js' -o \
+			-name '*.scss' -o \
+			-name '*.less' -o \
+			-name '*.c' -o \
+			-name '*.h' \
+		| xargs wc -l
+}
 
 # friendly message
 echo "Shiny. Let's be bad guys."
