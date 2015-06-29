@@ -26,9 +26,6 @@ export PS1="$COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
 # folders
 export PRET=~/Projects
 
-# ant options from https://wiki.corp.code42.com/index.php/Development_Quickstart
-export ANT_OPTS="-Xmx1024m -Xms512m"
-
 ##################
 # define functions
 
