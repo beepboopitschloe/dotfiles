@@ -54,6 +54,13 @@ endfunc
 
 nnoremap <C-i> :call NumberToggle()<CR>
 
+""""""""""""""""""""
+" emmet-vim settings
+
+" only activate on HTML and CSS files
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+
 """""""""""""""""""
 " NERDTree settings
 
