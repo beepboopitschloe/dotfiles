@@ -34,8 +34,25 @@ set ruler
 " highlight columns 80, 100
 set colorcolumn=80
 
-" show line numbers
-set number
+""""""""""""""""""""""
+" line number settings
+"
+" want to show absolute line numbers when in insert mode or out of focus,
+" relative numbers when moving around
+"
+" http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+
+set relativenumber
+
+function! NumberToggle()
+	if(&relativenumber == 1)
+		set number
+	else
+		set relativenumber
+	endif
+endfunc
+
+nnoremap <C-i> :call NumberToggle()<CR>
 
 """""""""""""""""""
 " NERDTree settings
