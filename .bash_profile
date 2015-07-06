@@ -53,3 +53,6 @@ echo "Shiny. Let's be bad guys."
 
 
 source /Users/noah.muth/.iterm2_shell_integration.bash
+
+export NVM_DIR="/Users/noah.muth/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
