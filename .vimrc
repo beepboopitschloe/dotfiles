@@ -34,6 +34,9 @@ set ruler
 " highlight columns 80, 100
 set colorcolumn=80
 
+" let Markdown be Markdown
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
 """"""""""""""""""""""
 " line number settings
 "
@@ -53,13 +56,6 @@ function! NumberToggle()
 endfunc
 
 nnoremap <C-i> :call NumberToggle()<CR>
-
-""""""""""""""""""""
-" emmet-vim settings
-
-" only activate on HTML and CSS files
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
 
 """""""""""""""""""
 " NERDTree settings
