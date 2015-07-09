@@ -17,6 +17,9 @@ export COLOR_YELLOW='\[\e[1;33m\]'
 export COLOR_GRAY='\[\e[0;30m\]'
 export COLOR_LIGHT_GRAY='\[\e[0;37m\]'
 
+# source git-completion
+source ./git-completion.bash
+
 # source environment vars
 source ~/.env_vars.sh
 
