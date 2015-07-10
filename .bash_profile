@@ -17,9 +17,6 @@ export COLOR_YELLOW='\[\e[1;33m\]'
 export COLOR_GRAY='\[\e[0;30m\]'
 export COLOR_LIGHT_GRAY='\[\e[0;37m\]'
 
-# source git-completion
-source ./git-completion.bash
-
 # source environment vars
 source ~/.env_vars.sh
 
@@ -28,6 +25,9 @@ export PS1="$COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
 
 # folders
 export PRET=~/Projects
+
+# source git-completion
+source $PRET/dotfiles/git-completion.bash
 
 ##################
 # define functions
