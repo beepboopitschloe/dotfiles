@@ -37,6 +37,9 @@ set colorcolumn=80
 " let Markdown be Markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
+" remap CtrlP to to avoid confusion with autocomplete
+let g:ctrlp_map = '<Leader>r'
+
 """"""""""""""""""""""
 " line number settings
 "
