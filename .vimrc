@@ -43,6 +43,9 @@ let g:ctrlp_map = '<Leader>r'
 " tell CtrlP to ignore node_modules, DS_Store, build folders
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|build\|dist'
 
+" remap Emmet to avoid collision
+let g:user_emmet_leader_key = '<Leader>e'
+
 """"""""""""""""""""""
 " line number settings
 "
