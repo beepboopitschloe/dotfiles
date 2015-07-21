@@ -40,6 +40,9 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 " remap CtrlP to to avoid confusion with autocomplete
 let g:ctrlp_map = '<Leader>r'
 
+" tell CtrlP to ignore node_modules, DS_Store, build folders
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|build\|dist'
+
 """"""""""""""""""""""
 " line number settings
 "
