@@ -51,6 +51,35 @@ function sloc() {
 		| xargs wc -l
 }
 
+function pfctl_block_rule() {
+	echo "block drop quick on lo0 proto tcp from any to any port = $1"
+}
+
+# block a port
+function pblock() {
+	port=$1
+	if [ -z "$port" ]; then
+		echo "Usage: pblock <port>"
+		return 1;
+	fi
+
+	(sudo pfctl -sr 2>/dev/null; echo "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
+	echo $(sudo pfctl -sr)
+}
+
+# unblock a port
+function punblock() {
+	port=$1
+
+	if [ -z "$port" ]; then
+		echo "Usage: punblock <port>"
+		return 1;
+	fi
+
+	(sudo pfctl -sr 2>/dev/null | fgrep -v "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
+	echo $(sudo pfctl -sr)
+}
+
 # friendly message
 echo "Shiny. Let's be bad guys."
 
