@@ -83,8 +83,7 @@ function punblock() {
 # friendly message
 echo "Shiny. Let's be bad guys."
 
+source $HOME/.iterm2_shell_integration.bash
 
-source /Users/noah.muth/.iterm2_shell_integration.bash
-
-export NVM_DIR="/Users/noah.muth/.nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
