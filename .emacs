@@ -1,3 +1,9 @@
+(setq my-sweet-packages
+      '(column-enforce-mode column-marker elisp-slime-nav evil-leader evil
+			     goto-chg undo-tree goto-chg material-theme org
+			     rainbow-delimiters relative-line-numbers slime
+			     undo-tree org-trello))
+
 (add-to-list 'load-path "~/Misc/slime/")
 (require 'slime-autoloads)
 (setq inferior-lisp-program "~/Misc/ccl/dx86cl64")
@@ -8,8 +14,14 @@
 (require 'package)
 (package-initialize)
 
-(require 'elisp-slime-nav)
+(or (file-exists-p package-user-dir) (package-refresh-contents))
 
+; install missing packages from my-sweet-packages
+(dolist (package my-sweet-packages)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+(require 'elisp-slime-nav)
 
 (defun my-lisp-hook ()
   (elisp-slime-nav-mode)
@@ -18,6 +30,8 @@
 
 ; trigger word combos
 (defvar word-cmd-plist ())
+
+package-activated-list
 
 (defmacro do-word-command (word)
   `(funcall (lax-plist-get word-cmd-plist ,word)))
