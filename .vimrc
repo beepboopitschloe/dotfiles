@@ -64,8 +64,6 @@ function! NumberToggle()
 	endif
 endfunc
 
-nnoremap <C-i> :call NumberToggle()<CR>
-
 """""""""""""""""""
 " NERDTree settings
 
