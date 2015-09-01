@@ -39,15 +39,19 @@ alias fuck='sudo $(history -p !!)'
 # public/libs
 function sloc() {
 	find . -path ./node_modules -prune -o \
+			-path ./bower_components -prune -o \
 			-path ./public/lib -prune -o \
 			-path ./public/libs -prune -o \
 			-path ./*/lib -prune -o \
 			-path ./*/dist -prune -o \
+			-path ./*/build -prune -o \
 			-name '*.js' -o \
 			-name '*.scss' -o \
 			-name '*.less' -o \
 			-name '*.c' -o \
-			-name '*.h' \
+			-name '*.h' -o \
+			-name '*.rb' -o \
+			-name '*.lisp' \
 		| xargs wc -l
 }
 
@@ -87,3 +91,4 @@ source $HOME/.iterm2_shell_integration.bash
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
