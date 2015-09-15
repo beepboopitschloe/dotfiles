@@ -84,6 +84,14 @@ function punblock() {
 	echo $(sudo pfctl -sr)
 }
 
+# function to make a notification on OS X
+function notify() {
+	title=$1
+	msg=$2
+
+	osascript -e "display notification \"$msg\" with title \"$title\""
+}
+
 # friendly message
 echo "Shiny. Let's be bad guys."
 
