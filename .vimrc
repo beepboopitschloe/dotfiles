@@ -64,6 +64,11 @@ function! NumberToggle()
 	endif
 endfunc
 
+"""""""""""""""""""""""""""""""""
+" leader combo to toggle hlsearch
+
+map <Leader>f :set hlsearch!<CR>
+
 """""""""""""""""""
 " NERDTree settings
 
