@@ -16,6 +16,9 @@ set smartindent
 " end indentation rules
 """""""""""""""""""""""
 
+" wrap text at 80 columns
+set tw=80
+
 " scroll control
 set scrolloff=3
 set sidescrolloff=5
@@ -45,6 +48,11 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|build\|dist'
 
 " remap Emmet to avoid collision
 let g:user_emmet_leader_key = '<Leader>e'
+
+" don't automatically fold everything
+set foldlevelstart=99
+set foldmethod=indent
+set nofoldenable
 
 """"""""""""""""""""""
 " line number settings
