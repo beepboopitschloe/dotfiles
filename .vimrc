@@ -93,3 +93,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " show hidden files by default
 let NERDTreeShowHidden=1
 
+" ignore patterns
+" .meta (unity)
+let NERDTreeIgnore=['\.meta$']
+
