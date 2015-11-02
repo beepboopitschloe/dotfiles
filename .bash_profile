@@ -92,6 +92,11 @@ function notify() {
 	osascript -e "display notification \"$msg\" with title \"$title\""
 }
 
+# which process is using port $1?
+function who_is_using() {
+	lsof -n -i4TCP:$1 | grep LISTEN
+}
+
 # friendly message
 echo "Shiny. Let's be bad guys."
 
