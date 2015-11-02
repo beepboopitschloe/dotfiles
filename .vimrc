@@ -72,6 +72,11 @@ function! NumberToggle()
 	endif
 endfunc
 
+"""""""""""""""""""""""""""""""""""
+" leader combo to clear CtrlP cache
+
+map <Leader>c :CtrlPClearAllCaches<CR>
+
 """""""""""""""""""""""""""""""""
 " leader combo to toggle hlsearch
 
