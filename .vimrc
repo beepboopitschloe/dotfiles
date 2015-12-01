@@ -13,6 +13,8 @@ set softtabstop=2
 set smarttab
 set smartindent
 
+au BufNewFile,BufRead *.elm set expandtab
+
 " end indentation rules
 """""""""""""""""""""""
 
