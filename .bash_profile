@@ -17,6 +17,10 @@ export COLOR_YELLOW='\[\e[1;33m\]'
 export COLOR_GRAY='\[\e[0;30m\]'
 export COLOR_LIGHT_GRAY='\[\e[0;37m\]'
 
+# what terminal emulator are we in?
+term_is_iterm2=$([[ $TERM_PROGRAM = "iTerm.app" ]])
+term_is_emacs=$([[ $TERM = "eterm-color" ]])
+
 # alias to reload the bash profile
 alias reload="source ~/.bash_profile"
 
@@ -103,7 +107,9 @@ function who_is_using() {
 # friendly message
 echo "Shiny. Let's be bad guys."
 
-source $HOME/.iterm2_shell_integration.bash
+if [ $term_is_iterm2 ]; then
+  source $HOME/.iterm2_shell_integration.bash
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
