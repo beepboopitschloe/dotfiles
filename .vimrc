@@ -13,6 +13,8 @@ set softtabstop=2
 set smarttab
 set smartindent
 
+au BufRead,BufNewFile *.elm set expandtab
+
 " end indentation rules
 """""""""""""""""""""""
 
@@ -76,6 +78,16 @@ endfunc
 " leader combo to toggle hlsearch
 
 map <Leader>f :set hlsearch!<CR>
+
+"""""""""""""
+" Ag settings
+
+" Leader+/ to run ag
+nnoremap <Leader>/ :Ag ''<Left>
+
+" search for the current word or selection in the whole project
+nnoremap <Leader>a :Ag '\b<C-R>=expand("<cword>")<CR>\b'<CR>
+xnoremap <Leader>a "sy:Ag '<C-R>s'<CR>
 
 """""""""""""""""""
 " NERDTree settings
