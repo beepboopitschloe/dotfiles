@@ -13,7 +13,7 @@ set softtabstop=2
 set smarttab
 set smartindent
 
-au BufRead,BufNewFile *.elm set expandtab
+au BufNewFile,BufRead *.elm set expandtab
 
 " end indentation rules
 """""""""""""""""""""""
@@ -73,6 +73,11 @@ function! NumberToggle()
 		set relativenumber
 	endif
 endfunc
+
+"""""""""""""""""""""""""""""""""""
+" leader combo to clear CtrlP cache
+
+map <Leader>c :CtrlPClearAllCaches<CR>
 
 """""""""""""""""""""""""""""""""
 " leader combo to toggle hlsearch
