@@ -37,6 +37,8 @@ values."
      version-control
      elixir
      elm
+     common-lisp
+     javascript
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -194,14 +196,62 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-  )
+	(progn
+		;; load local configuration
+    (condition-case nil
+        (progn
+          (load "~/.local-spacemacs.el")
+          (nmuth-local/user-init))
+      (error (message "error executing nmuth-local/user-init")))))
+
+(defun nmuth/yes-tabs ()
+  (setq-default indent-tabs-mode t))
+
+(defun nmuth/no-tabs ()
+  (setq-default indent-tabs-mode nil))
+
+(defun nmuth/no-fill-for-hook (hook-name)
+  (progn
+    (add-hook hook-name 'spacemacs/toggle-auto-fill-mode-off)
+    (add-hook hook-name 'spacemacs/toggle-fill-column-indicator-off)))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (setq-default tab-width 2)
-)
+  (progn
+    ;; relative line numbers everywhere
+		(linum-relative-global-mode t)
+
+		;; use appropriate mode for .jsx files
+    (add-to-list 'auto-mode-alist '("\\.jsx$" . js2-jsx-mode))
+
+		;; indentation settings
+    ;; tabs for javascript, spaces for everything else
+    ;; js2-mode-hook will execute js-mode-hook as well
+    (add-hook 'js-mode-hook 'nmuth/yes-tabs)
+    (setq-default js2-basic-offset 2)
+
+    ;; use fill-mode most of the time
+    (spacemacs/toggle-auto-fill-mode-on)
+    (spacemacs/toggle-fill-column-indicator-on)
+
+    ;; but not for anything bash-related
+    (nmuth/no-fill-for-hook 'bash-mode-hook)
+    (nmuth/no-fill-for-hook 'term-mode-hook)
+
+    ;; the fill column indicator is glitchy in org mode
+    (add-hook 'org-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
+
+    ;; show the time
+    (display-time)
+
+		;; load local configuration
+    (condition-case nil
+        (progn
+          (load "~/.local-spacemacs.el")
+          (nmuth-local/user-config))
+      (error (message "error executing nmuth-local/user-config")))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
