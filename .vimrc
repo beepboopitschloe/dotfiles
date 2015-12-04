@@ -84,6 +84,16 @@ map <Leader>c :CtrlPClearAllCaches<CR>
 
 map <Leader>f :set hlsearch!<CR>
 
+"""""""""""""
+" Ag settings
+
+" Leader+/ to run ag
+nnoremap <Leader>/ :Ag ''<Left>
+
+" search for the current word or selection in the whole project
+nnoremap <Leader>a :Ag '\b<C-R>=expand("<cword>")<CR>\b'<CR>
+xnoremap <Leader>a "sy:Ag '<C-R>s'<CR>
+
 """""""""""""""""""
 " NERDTree settings
 
