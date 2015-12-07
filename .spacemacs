@@ -232,6 +232,8 @@ layers configuration. You are free to put any user code."
     (add-hook 'js-mode-hook 'nmuth/yes-tabs)
     (setq-default js2-basic-offset 2)
 
+		(add-hook 'html-mode-hook 'nmuth/no-tabs)
+
     ;; use fill-mode most of the time
     (spacemacs/toggle-auto-fill-mode-on)
     (spacemacs/toggle-fill-column-indicator-on)
