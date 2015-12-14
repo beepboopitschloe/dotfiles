@@ -27,7 +27,7 @@ values."
      ;; better-defaults
      emacs-lisp
      git
-     ;; markdown
+     markdown
      org
      (shell :variables
             shell-default-height 30
@@ -210,6 +210,11 @@ user code."
 (defun nmuth/no-tabs ()
   (setq-default indent-tabs-mode nil))
 
+(defun nmuth/yes-fill-for-hook (hook-name)
+  (progn
+    (add-hook hook-name 'spacemacs/toggle-auto-fill-mode-on)
+    (add-hook hook-name 'spacemacs/toggle-fill-column-indicator-on)))
+
 (defun nmuth/no-fill-for-hook (hook-name)
   (progn
     (add-hook hook-name 'spacemacs/toggle-auto-fill-mode-off)
@@ -232,13 +237,23 @@ layers configuration. You are free to put any user code."
     (add-hook 'js-mode-hook 'nmuth/yes-tabs)
     (setq-default js2-basic-offset 2)
 
-    ;; use fill-mode most of the time
-    (spacemacs/toggle-auto-fill-mode-on)
-    (spacemacs/toggle-fill-column-indicator-on)
+    (add-hook 'elm-mode-hook 'nmuth/no-tabs)
+    (add-hook 'html-mode-hook 'nmuth/no-tabs)
 
-    ;; but not for anything bash-related
+    ;; use fill-mode most of the time
+    (nmuth/yes-fill-for-hook 'js2-mode-hook)
+    (nmuth/yes-fill-for-hook 'org-mode-hook)
+
+    ;; but not for anything bash-related or html
     (nmuth/no-fill-for-hook 'bash-mode-hook)
     (nmuth/no-fill-for-hook 'term-mode-hook)
+    (nmuth/no-fill-for-hook 'html-mode-hook)
+
+    ;; get rid of that fucking dired command that freezes everything
+    (add-hook 'dired-mode-hook (lambda ()
+                                  (progn
+                                    (local-set-key (kbd "G") (message "whoops"))
+                                    (message "dired mode is safe"))))
 
     ;; the fill column indicator is glitchy in org mode
     (add-hook 'org-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
