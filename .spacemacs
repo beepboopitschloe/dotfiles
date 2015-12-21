@@ -39,6 +39,10 @@ values."
      elm
      common-lisp
      javascript
+     ruby-on-rails
+     html
+		 csharp
+     themes-megapack
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -82,10 +86,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         solarized-light
+   dotspacemacs-themes '(ample-zen
                          solarized-dark
+                         solarized-light
+                         spacemacs-dark
+                         spacemacs-light
                          leuven
                          monokai
                          zenburn)
@@ -226,17 +231,29 @@ layers configuration. You are free to put any user code."
 		;; use appropriate mode for .jsx files
     (add-to-list 'auto-mode-alist '("\\.jsx$" . js2-jsx-mode))
 
-		;; indentation settings
-    ;; tabs for javascript, spaces for everything else
+    (add-hook 'csharp-mode-hook '(lambda ()
+                                   (setq c-basic-offset 2)))
+
     ;; js2-mode-hook will execute js-mode-hook as well
-    (add-hook 'js-mode-hook 'nmuth/yes-tabs)
+    (add-hook 'js2-mode-hook 'nmuth/yes-tabs)
     (setq-default js2-basic-offset 2)
 
 		(add-hook 'html-mode-hook 'nmuth/no-tabs)
 
+    (defun my-web-mode-hook ()
+      (progn
+				(setq indent-tabs-mode nil)
+        (setq web-mode-markup-indent-offset 2)
+        (setq web-mode-css-indent-offset 2)))
+
+    (add-hook 'web-mode-hook 'my-web-mode-hook)
+
     ;; use fill-mode most of the time
     (spacemacs/toggle-auto-fill-mode-on)
     (spacemacs/toggle-fill-column-indicator-on)
+
+    (setq-default css-indent-offset 2)
+    (setq-default js2-bounce-indent-p t)
 
     ;; but not for anything bash-related
     (nmuth/no-fill-for-hook 'bash-mode-hook)
