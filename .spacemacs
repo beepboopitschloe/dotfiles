@@ -43,6 +43,7 @@ values."
      html
 		 csharp
      themes-megapack
+		 go
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -234,7 +235,7 @@ layers configuration. You are free to put any user code."
 		(linum-relative-global-mode t)
 
 		;; use appropriate mode for .jsx files
-    (add-to-list 'auto-mode-alist '("\\.jsx$" . js2-jsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx?$" . js2-jsx-mode))
 
     (add-hook 'csharp-mode-hook '(lambda ()
                                    (setq c-basic-offset 2)))
