@@ -99,6 +99,12 @@ function notify() {
 	osascript -e "display notification \"$msg\" with title \"$title\""
 }
 
+# pretty-print json output
+function json() {
+	cmd=$@
+	$cmd | python -m json.tool
+}
+
 # which process is using port $1?
 function who_is_using() {
 	lsof -n -i4TCP:$1 | grep LISTEN
