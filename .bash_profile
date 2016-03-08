@@ -105,6 +105,23 @@ function json() {
 	$cmd | python -m json.tool
 }
 
+# curl shortcuts
+function curl-get() {
+	curl -X GET -H "Content-Type: application/json" $@
+}
+
+function curl-post() {
+	curl -X POST -H "Content-Type: application/json" $@
+}
+
+function curl-put() {
+	curl -X PUT -H "Content-Type: application/json" $@
+}
+
+function curl-del() {
+	curl -X DELETE -H "Content-Type: application/json" $@
+}
+
 # which process is using port $1?
 function who_is_using() {
 	lsof -n -i4TCP:$1 | grep LISTEN
