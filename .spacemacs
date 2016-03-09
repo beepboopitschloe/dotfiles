@@ -43,7 +43,10 @@ values."
      html
 		 csharp
      themes-megapack
+     typescript
 		 go
+     racket
+     dlang
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
