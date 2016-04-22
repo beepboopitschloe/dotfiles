@@ -127,6 +127,8 @@ function who_is_using() {
 	lsof -n -i4TCP:$1 | grep LISTEN
 }
 
+alias vihosts='sudo vim /etc/hosts'
+
 # friendly message
 echo "Shiny. Let's be bad guys."
 
@@ -137,3 +139,9 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
+
+###-tns-completion-start-###
+if [ -f /Users/noah.muth/.tnsrc ]; then 
+    source /Users/noah.muth/.tnsrc 
+fi
+###-tns-completion-end-###
