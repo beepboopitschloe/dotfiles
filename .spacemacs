@@ -283,6 +283,9 @@ layers configuration. You are free to put any user code."
                                     (local-set-key (kbd "G") (message "whoops"))
                                     (message "dired mode is safe"))))
 
+		;; hotkey to toggle linum-mode
+		(global-set-key (kbd "s-l") 'linum-mode)
+
     ;; show the time
     (display-time)
 
