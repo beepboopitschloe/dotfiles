@@ -139,7 +139,6 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-
 ###-tns-completion-start-###
 if [ -f /Users/noah.muth/.tnsrc ]; then 
     source /Users/noah.muth/.tnsrc 

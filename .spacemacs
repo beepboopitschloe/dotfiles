@@ -235,7 +235,9 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (progn
-    ;; relative line numbers everywhere
+    (setq inferior-lisp-program "sbcl")
+
+    ;; RELATIVE line numbers everywhere
 		(linum-relative-global-mode t)
 
 		;; use appropriate mode for .jsx files
@@ -250,6 +252,7 @@ layers configuration. You are free to put any user code."
 
     (add-hook 'elm-mode-hook 'nmuth/no-tabs)
     (add-hook 'html-mode-hook 'nmuth/no-tabs)
+    (add-hook 'typescript-mode-hook 'nmuth/no-tabs)
 
     (defun my-web-mode-hook ()
       (progn
@@ -270,6 +273,9 @@ layers configuration. You are free to put any user code."
     (nmuth/no-fill-for-hook 'bash-mode-hook)
     (nmuth/no-fill-for-hook 'term-mode-hook)
     (nmuth/no-fill-for-hook 'html-mode-hook)
+
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-omnisharp))
 
     ;; get rid of that fucking dired command that freezes everything
     (add-hook 'dired-mode-hook (lambda ()
