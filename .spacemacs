@@ -47,7 +47,7 @@ values."
 		 go
 		 clojure
      racket
-     dlang
+		 restclient
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -103,7 +103,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("mononoki"
                                :size 13
                                :weight normal
                                :width normal
@@ -282,9 +282,6 @@ layers configuration. You are free to put any user code."
                                   (progn
                                     (local-set-key (kbd "G") (message "whoops"))
                                     (message "dired mode is safe"))))
-
-    ;; the fill column indicator is glitchy in org mode
-    (add-hook 'org-mode-hook 'spacemacs/toggle-fill-column-indicator-off)
 
     ;; show the time
     (display-time)
