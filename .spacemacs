@@ -208,11 +208,11 @@ It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
 	(progn
 		;; load local configuration
-    (condition-case nil
+    (condition-case err
         (progn
           (load "~/.local-spacemacs.el")
           (nmuth-local/user-init))
-      (error (message "error executing nmuth-local/user-init")))))
+      (error (message "error executing nmuth-local/user-init: %s" (error-message-string err))))))
 
 (defun nmuth/yes-tabs ()
   (setq-default indent-tabs-mode t))
@@ -290,11 +290,11 @@ layers configuration. You are free to put any user code."
     (display-time)
 
 		;; load local configuration
-    (condition-case nil
+    (condition-case err
         (progn
           (load "~/.local-spacemacs.el")
           (nmuth-local/user-config))
-      (error (message "error executing nmuth-local/user-config")))))
+      (error (message "error executing nmuth-local/user-config: %s" (error-message-string err))))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
