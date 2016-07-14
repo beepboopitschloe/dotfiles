@@ -13,7 +13,7 @@ values."
    dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/Projects/dotfiles/layers/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
@@ -47,7 +47,9 @@ values."
 		 go
 		 clojure
      racket
+     dlang
 		 restclient
+     nmuth-local-config
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -273,6 +275,10 @@ layers configuration. You are free to put any user code."
     (nmuth/no-fill-for-hook 'bash-mode-hook)
     (nmuth/no-fill-for-hook 'term-mode-hook)
     (nmuth/no-fill-for-hook 'html-mode-hook)
+
+    (setq mac-command-modifier 'super)
+    (setq mac-option-modifier 'meta)
+    (setq mac-control-modifier 'control)
 
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-omnisharp))
