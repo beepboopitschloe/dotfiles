@@ -49,6 +49,7 @@ values."
      racket
      dlang
 		 restclient
+     lua
      nmuth-local-config
      )
    ;; List of additional packages that will be installed without being
@@ -253,6 +254,7 @@ layers configuration. You are free to put any user code."
     (setq-default js2-basic-offset 2)
 
     (add-hook 'elm-mode-hook 'nmuth/no-tabs)
+    (add-hook 'elixir-mode-hook 'nmuth/no-tabs)
     (add-hook 'html-mode-hook 'nmuth/no-tabs)
     (add-hook 'typescript-mode-hook 'nmuth/no-tabs)
 
