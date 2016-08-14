@@ -137,7 +137,7 @@ if [ $term_is_iterm2 ]; then
 fi
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+. "$(brew --prefix nvm)/nvm.sh"
 
 ###-tns-completion-start-###
 if [ -f /Users/noah.muth/.tnsrc ]; then 

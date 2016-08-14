@@ -1,6 +1,6 @@
 (message "Configuring org mode...")
 
-(setq org-directory "/ssh:nmuth@noahmuth.com:/home/nmuth/org")
+(setq org-directory "~/org")
 
 (setq org-todo-keywords
       '((sequence "TODO" "NEXT" "STARTED" "REVIEW" "|" "DONE")
@@ -26,3 +26,4 @@
         ("MEETING" :foreground "forest green" :weight bold)))
 
 (setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-agenda-files (list org-directory))
