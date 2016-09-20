@@ -40,6 +40,29 @@
   (setq indent-tabs-mode (not indent-tabs-mode))
   (message "tabs: %s" (if indent-tabs-mode "yes" "no")))
 
+(defun nmuth/shell-buffer-name (project)
+  (format "*%s-shell*" project))
+
+(defun nmuth/find-shell-for-project (project)
+  (get-buffer (nmuth/shell-buffer-name project)))
+
+(defun nmuth/create-shell-buffer (project)
+  (let* ((buffer (get-buffer-create (nmuth/shell-buffer-name project))))
+    buffer))
+
+(defun nmuth/pop-shell-buffer (buffer)
+  )
+
+(defun nmuth/find-or-open-shell-for-current-project ()
+  (let* ((project-root (cdr (project-current)))
+	 (project-path-parts (split-string project-root "/"))
+	 (project-name (nth (- (length project-path-parts) 2) project-path-parts))
+	 (existing-shell-buffer (nmuth/find-shell-for-project project-name))
+	 (shell-buffer (if existing-shell-buffer
+			   existing-shell-buffer
+			 (nmuth/create-shell-buffer project-name))))
+    (nmuth/pop-shell-buffer shell-buffer)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; load necessary functions for configuration
 
@@ -61,6 +84,8 @@
 (use-package swiper :ensure t)
 (use-package counsel :ensure t)
 (use-package counsel-projectile :ensure t)
+(use-package ag :ensure t)
+(use-package restclient :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -126,7 +151,7 @@
    "oO" 'org-clock-out
 
    "p" '(:ignore t :which-key "projectile")
-   "pa" 'projectile-ag
+   "ps" 'projectile-ag
    "pb" 'counsel-projectile-switch-to-buffer
    "pd" 'counsel-projectile-find-dir
    "pf" 'counsel-projectile-find-file
