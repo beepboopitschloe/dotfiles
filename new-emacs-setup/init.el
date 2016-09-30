@@ -91,6 +91,7 @@
 (use-package counsel-projectile :ensure t)
 (use-package ag :ensure t)
 (use-package restclient :ensure t)
+(use-package ledger-mode :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -206,6 +207,10 @@
 (linum-relative-global-mode)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
+
+;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
+;; of the list so that we can easily override it for particular modes. (add-hook
+(add-hook 'after-load-functions (lambda (f) (setq indent-tabs-mode nil)) t)
 
 ;; open an org file if we're starting emacs now
 (unless (boundp 'nmuth/first-startup-finished)
