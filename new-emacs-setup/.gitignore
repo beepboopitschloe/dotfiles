@@ -1,2 +1,5 @@
 # ignore Aquamacs config file
 SessionDesktop.el
+
+# ignore downloaded packages
+elpa

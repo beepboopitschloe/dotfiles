@@ -43,25 +43,30 @@
 (defun nmuth/shell-buffer-name (project)
   (format "*%s-shell*" project))
 
-(defun nmuth/find-shell-for-project (project)
-  (get-buffer (nmuth/shell-buffer-name project)))
-
-(defun nmuth/create-shell-buffer (project)
-  (let* ((buffer (get-buffer-create (nmuth/shell-buffer-name project))))
-    buffer))
-
-(defun nmuth/pop-shell-buffer (buffer)
-  )
+(defun nmuth/spawn-shell (name &optional directory)
+  "Create a shell buffer with the given name"
+  (interactive "MName of shell buffer to create: ")
+  (let ((buf (get-buffer-create (generate-new-buffer-name name))))
+    (shell buf)
+    (process-send-string buf ". ~/.bash_profile\n")
+    (when directory
+      (process-send-string buf (format "cd %s\n" directory)))
+    (process-send-string buf "echo ''\n")
+    buf))
 
 (defun nmuth/find-or-open-shell-for-current-project ()
+  (interactive)
   (let* ((project-root (cdr (project-current)))
-	 (project-path-parts (split-string project-root "/"))
-	 (project-name (nth (- (length project-path-parts) 2) project-path-parts))
-	 (existing-shell-buffer (nmuth/find-shell-for-project project-name))
-	 (shell-buffer (if existing-shell-buffer
-			   existing-shell-buffer
-			 (nmuth/create-shell-buffer project-name))))
-    (nmuth/pop-shell-buffer shell-buffer)))
+         (project-path-parts (split-string project-root "/"))
+         (project-name (nth (- (length project-path-parts) 2) project-path-parts))
+         (buffer-name (nmuth/shell-buffer-name project-name))
+         (existing-shell-buffer (get-buffer buffer-name)))
+    (if existing-shell-buffer
+        (progn
+          (process-send-string existing-shell-buffer (format "cd %s\n" project-root))
+          (process-send-string existing-shell-buffer "echo ''\n")
+          (pop-to-buffer existing-shell-buffer))
+      (pop-to-buffer (nmuth/spawn-shell buffer-name project-root)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; load necessary functions for configuration
@@ -151,11 +156,12 @@
    "oO" 'org-clock-out
 
    "p" '(:ignore t :which-key "projectile")
-   "ps" 'projectile-ag
+   "pa" 'projectile-ag
    "pb" 'counsel-projectile-switch-to-buffer
    "pd" 'counsel-projectile-find-dir
    "pf" 'counsel-projectile-find-file
    "pp" 'counsel-projectile-switch-project
+   "ps" 'nmuth/find-or-open-shell-for-current-project
 
    "t" '(:ignore t :which-key "misc")
    "tl" 'linum-mode
