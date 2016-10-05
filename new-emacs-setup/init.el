@@ -106,12 +106,8 @@
 
 (use-package projectile :ensure t
   :config
-  (setq projectile-completion-system 'ivy))
-
-(use-package js2-mode :ensure t
-  :config
-  (setq-default js2-bounce-indent-p t)
-  (setq-default js2-basic-offset 2))
+  (setq projectile-completion-system 'ivy)
+  (setq projectile-switch-project-action 'projectile-dired))
 
 ;;;;;;;;;;;;;;;
 ;; key bindings
@@ -186,10 +182,14 @@
    "wm" 'spacemacs/toggle-maximize-buffer
    ))
 
+(general-define-key :states '(normal visual insert emacs)
+                    :keymaps 'shell-mode-map
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
+   "mr" 'nmuth/project-shell-cd-to-root)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
-
-(add-to-list 'auto-mode-alist '("\\.jsx?$" . js2-jsx-mode))
 
 (load-file "~/.emacs.d/org.el")
 
@@ -207,6 +207,7 @@
 (linum-relative-global-mode)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
+(tabbar-mode 0)
 
 ;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
 ;; of the list so that we can easily override it for particular modes. (add-hook
