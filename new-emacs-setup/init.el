@@ -98,6 +98,16 @@
   (interactive)
   (message "current major mode is %s" major-mode))
 
+(defun nmuth/first-load-setup ()
+  ;; configure GUI things if we're running in a GUI
+  (when (memq window-system '(mac ns))
+    (nmuth/gui-setup))
+  (find-file "~/org/index.org"))
+
+;; portable 'close-window
+(unless (boundp 'close-window)
+  (defun close-window () (interactive) (delete-window)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; load necessary functions for configuration
 
@@ -122,6 +132,10 @@
 (use-package ag :ensure t)
 (use-package restclient :ensure t)
 (use-package ledger-mode :ensure t)
+(use-package elixir-mode :ensure t)
+(use-package alchemist :ensure t)
+(use-package lua-mode :ensure t)
+(use-package company :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -177,6 +191,8 @@
 
    "j=" 'spacemacs/indent-region-or-buffer
 
+   "l" 'mac-launchpad
+
    "o" '(:ignore t :which-key "org")
    "oa" 'org-agenda
    "oo" (lambda () (interactive) (find-file "~/org/index.org"))
@@ -222,13 +238,10 @@
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/mac-launchpad.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; final startup tasks
-
-;; configure GUI things if we're running in a GUI
-(when (memq window-system '(mac ns))
-  (nmuth/gui-setup))
 
 ;; turn on some minor modes
 (evil-mode)
@@ -245,5 +258,5 @@
 
 ;; open an org file if we're starting emacs now
 (unless (boundp 'nmuth/first-startup-finished)
-  (find-file "~/org/index.org"))
+  (nmuth/first-load-setup))
 (defvar nmuth/first-startup-finished t)
