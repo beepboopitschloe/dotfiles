@@ -54,19 +54,49 @@
     (process-send-string buf "echo ''\n")
     buf))
 
-(defun nmuth/find-or-open-shell-for-current-project ()
-  (interactive)
-  (let* ((project-root (cdr (project-current)))
+(defun nmuth/project-info (&optional explicit-project)
+  (let* ((project (if explicit-project
+                      explicit-project
+                    (project-current)))
+         (project-root (cdr project))
          (project-path-parts (split-string project-root "/"))
          (project-name (nth (- (length project-path-parts) 2) project-path-parts))
-         (buffer-name (nmuth/shell-buffer-name project-name))
+         (shell-buffer-name (nmuth/shell-buffer-name project-name)))
+    (list 'name project-name 'root project-root 'shell-buffer-name shell-buffer-name 'project project)))
+
+(defun nmuth/find-or-open-shell-for-current-project ()
+  (interactive)
+  (let* ((project (nmuth/project-info))
+         (project-name (plist-get project 'name))
+         (project-root (plist-get project 'root))
+         (buffer-name (plist-get project 'shell-buffer-name))
          (existing-shell-buffer (get-buffer buffer-name)))
     (if existing-shell-buffer
         (progn
           (process-send-string existing-shell-buffer (format "cd %s\n" project-root))
           (process-send-string existing-shell-buffer "echo ''\n")
           (pop-to-buffer existing-shell-buffer))
-      (pop-to-buffer (nmuth/spawn-shell buffer-name project-root)))))
+      (progn
+        (pop-to-buffer (nmuth/spawn-shell buffer-name project-root))
+        (cd project-root)))))
+
+(defun nmuth/project-shell-cd-to-root (&optional project-info)
+  (interactive)
+  (let* ((project (if project-info
+                      project-info
+                    (nmuth/project-info)))
+         (root (plist-get project 'root))
+         (buffer-name (plist-get project 'shell-buffer-name))
+         (buffer (get-buffer buffer-name)))
+    (if buffer
+        (progn
+          (process-send-string buffer (format "cd %s\n" root))
+          (process-send-string buffer "echo ''\n"))
+      (message "Buffer %s does not exist.\n" buffer-name))))
+
+(defun current-major-mode ()
+  (interactive)
+  (message "current major mode is %s" major-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; load necessary functions for configuration
