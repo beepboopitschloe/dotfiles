@@ -183,6 +183,7 @@
    "fr" 'counsel-recentf
 
    "g" '(:ignore t :which-key "magit")
+   "gc" 'magit-clone
    "gs" 'magit-status
 
    "h" '(:ignore t :which-key "help")
@@ -238,6 +239,7 @@
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
