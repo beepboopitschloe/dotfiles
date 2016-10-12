@@ -29,10 +29,11 @@
   (interactive)
   (unless (boundp 'color-theme-initialized)
     (color-theme-initialize))
-  (color-theme-subtle-hacker))
+  (color-theme-charcoal-black))
+                                        ;(color-theme-jonadabian-slate))
 
 (defun nmuth/gui-setup ()
-  (nmuth/light-theme)
+  (nmuth/dark-theme)
   (exec-path-from-shell-initialize))
 
 (defun nmuth/toggle-indent-tabs-mode ()
@@ -59,7 +60,9 @@
                       explicit-project
                     (project-current)))
          (project-root (cdr project))
-         (project-path-parts (split-string project-root "/"))
+         (project-path-parts (if project-root
+                                 (split-string project-root "/")
+                               (error (format "bad project def: %S" project))))
          (project-name (nth (- (length project-path-parts) 2) project-path-parts))
          (shell-buffer-name (nmuth/shell-buffer-name project-name)))
     (list 'name project-name 'root project-root 'shell-buffer-name shell-buffer-name 'project project)))
@@ -93,6 +96,27 @@
           (process-send-string buffer (format "cd %s\n" root))
           (process-send-string buffer "echo ''\n"))
       (message "Buffer %s does not exist.\n" buffer-name))))
+
+(defun nmuth/shell-command-in-directory (dir cmd)
+  (let ((buffer-name "*Shell Command Output*"))
+    (with-current-buffer-window buffer-name nil nil
+                                (princ "*------- SHELL COMMAND -------*\n")
+                                (princ (format "directory:\t%s\n" dir))
+                                (princ (format "command:\t%s\n" cmd))
+                                (princ "\n*------- output -------*\n\n")
+                                (princ (shell-command-to-string (format "cd %s && %s" dir cmd)))
+                                (help-mode)
+                                (switch-to-buffer-other-window (current-buffer)))))
+
+(defun nmuth/shell-command-in-project-root (&optional project-info)
+  (interactive)
+  (let* ((project (if project-info
+                      project-info
+                    (nmuth/project-info)))
+         (project-root (plist-get project 'root))
+         (command (read-from-minibuffer "Command: ")))
+    (message "running: 'cd %s && %s'" project-root command project-root command)
+    (nmuth/shell-command-in-directory project-root command)))
 
 (defun current-major-mode ()
   (interactive)
@@ -153,6 +177,17 @@
   (setq projectile-completion-system 'ivy)
   (setq projectile-switch-project-action 'projectile-dired))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; packages with corresponding mode hooks
+
+(defun nmuth/d-mode-hook ()
+  (interactive)
+  (setq indent-tabs-mode nil))
+
+(use-package d-mode :ensure t
+  :config
+  (add-hook 'd-mode-hook #'nmuth/d-mode-hook))
+
 ;;;;;;;;;;;;;;;
 ;; key bindings
 
@@ -201,6 +236,7 @@
    "p" '(:ignore t :which-key "projectile")
    "pa" 'projectile-ag
    "pb" 'counsel-projectile-switch-to-buffer
+   "pc" 'nmuth/shell-command-in-project-root
    "pd" 'counsel-projectile-find-dir
    "pf" 'counsel-projectile-find-file
    "pp" 'counsel-projectile-switch-project
@@ -232,12 +268,13 @@
                     :keymaps 'shell-mode-map
                     :prefix "SPC"
                     :non-normal-prefix "C-c"
-   "mr" 'nmuth/project-shell-cd-to-root)
+                    "mr" 'nmuth/project-shell-cd-to-root)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -251,6 +288,7 @@
 (projectile-global-mode +1)
 (tool-bar-mode 0)
 (tabbar-mode 0)
+(scroll-bar-mode 0)
 
 ;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
 ;; of the list so that we can easily override it for particular modes. (add-hook
