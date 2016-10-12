@@ -218,6 +218,7 @@
    "fr" 'counsel-recentf
 
    "g" '(:ignore t :which-key "magit")
+   "gc" 'magit-clone
    "gs" 'magit-status
 
    "h" '(:ignore t :which-key "help")
