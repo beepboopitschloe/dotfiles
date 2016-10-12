@@ -104,18 +104,20 @@
                                 (princ (format "directory:\t%s\n" dir))
                                 (princ (format "command:\t%s\n" cmd))
                                 (princ "\n*------- output -------*\n\n")
-                                (princ (shell-command-to-string (format "cd %s && %s" dir cmd)))
+                                (start-process-shell-command "*shell-cmd-process*" buffer-name (format "cd %s && %s" dir cmd))
                                 (help-mode)
                                 (switch-to-buffer-other-window (current-buffer)))))
 
-(defun nmuth/shell-command-in-project-root (&optional project-info)
+(defun nmuth/shell-command-in-project-root (&optional optional-cmd project-info)
   (interactive)
   (let* ((project (if project-info
                       project-info
                     (nmuth/project-info)))
          (project-root (plist-get project 'root))
-         (command (read-from-minibuffer "Command: ")))
-    (message "running: 'cd %s && %s'" project-root command project-root command)
+         (command (if optional-cmd
+                      optional-cmd
+                    (read-from-minibuffer "Command: "))))
+    (message "running: 'cd %s && %s'" project-root command)
     (nmuth/shell-command-in-directory project-root command)))
 
 (defun current-major-mode ()
@@ -176,17 +178,6 @@
   :config
   (setq projectile-completion-system 'ivy)
   (setq projectile-switch-project-action 'projectile-dired))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; packages with corresponding mode hooks
-
-(defun nmuth/d-mode-hook ()
-  (interactive)
-  (setq indent-tabs-mode nil))
-
-(use-package d-mode :ensure t
-  :config
-  (add-hook 'd-mode-hook #'nmuth/d-mode-hook))
 
 ;;;;;;;;;;;;;;;
 ;; key bindings
@@ -274,8 +265,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
-(load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/dlang.el")
 (load-file "~/.emacs.d/javascript.el")
+(load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
