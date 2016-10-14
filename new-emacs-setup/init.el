@@ -79,8 +79,6 @@
 (use-package ag :ensure t)
 (use-package restclient :ensure t)
 (use-package ledger-mode :ensure t)
-(use-package elixir-mode :ensure t)
-(use-package alchemist :ensure t)
 (use-package lua-mode :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -182,6 +180,7 @@
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/dlang.el")
+(load-file "~/.emacs.d/elixir.el")
 (load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
