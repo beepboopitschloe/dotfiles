@@ -30,7 +30,7 @@
   (interactive)
   (unless (boundp 'color-theme-initialized)
     (color-theme-initialize))
-  (color-theme-charcoal-black))
+  (color-theme-charcoal-black)) ; (color-theme-jonadabian-slate))
 
 (defun nmuth/gui-setup ()
   (nmuth/dark-theme)
@@ -40,60 +40,6 @@
   (interactive)
   (setq indent-tabs-mode (not indent-tabs-mode))
   (message "tabs: %s" (if indent-tabs-mode "yes" "no")))
-
-(defun nmuth/shell-buffer-name (project)
-  (format "*%s-shell*" project))
-
-(defun nmuth/spawn-shell (name &optional directory)
-  "Create a shell buffer with the given name"
-  (interactive "MName of shell buffer to create: ")
-  (let ((buf (get-buffer-create (generate-new-buffer-name name))))
-    (shell buf)
-    (process-send-string buf ". ~/.bash_profile\n")
-    (when directory
-      (process-send-string buf (format "cd %s\n" directory)))
-    (process-send-string buf "echo ''\n")
-    buf))
-
-(defun nmuth/project-info (&optional explicit-project)
-  (let* ((project (if explicit-project
-                      explicit-project
-                    (project-current)))
-         (project-root (cdr project))
-         (project-path-parts (split-string project-root "/"))
-         (project-name (nth (- (length project-path-parts) 2) project-path-parts))
-         (shell-buffer-name (nmuth/shell-buffer-name project-name)))
-    (list 'name project-name 'root project-root 'shell-buffer-name shell-buffer-name 'project project)))
-
-(defun nmuth/find-or-open-shell-for-current-project ()
-  (interactive)
-  (let* ((project (nmuth/project-info))
-         (project-name (plist-get project 'name))
-         (project-root (plist-get project 'root))
-         (buffer-name (plist-get project 'shell-buffer-name))
-         (existing-shell-buffer (get-buffer buffer-name)))
-    (if existing-shell-buffer
-        (progn
-          (process-send-string existing-shell-buffer (format "cd %s\n" project-root))
-          (process-send-string existing-shell-buffer "echo ''\n")
-          (pop-to-buffer existing-shell-buffer))
-      (progn
-        (pop-to-buffer (nmuth/spawn-shell buffer-name project-root))
-        (cd project-root)))))
-
-(defun nmuth/project-shell-cd-to-root (&optional project-info)
-  (interactive)
-  (let* ((project (if project-info
-                      project-info
-                    (nmuth/project-info)))
-         (root (plist-get project 'root))
-         (buffer-name (plist-get project 'shell-buffer-name))
-         (buffer (get-buffer buffer-name)))
-    (if buffer
-        (progn
-          (process-send-string buffer (format "cd %s\n" root))
-          (process-send-string buffer "echo ''\n"))
-      (message "Buffer %s does not exist.\n" buffer-name))))
 
 (defun current-major-mode ()
   (interactive)
@@ -209,7 +155,6 @@
    "pd" 'counsel-projectile-find-dir
    "pf" 'counsel-projectile-find-file
    "pp" 'counsel-projectile-switch-project
-   "ps" 'nmuth/find-or-open-shell-for-current-project
 
    "t" '(:ignore t :which-key "misc")
    "tl" 'linum-mode
@@ -233,18 +178,14 @@
    "wm" 'spacemacs/toggle-maximize-buffer
    ))
 
-(general-define-key :states '(normal visual insert emacs)
-                    :keymaps 'shell-mode-map
-                    :prefix "SPC"
-                    :non-normal-prefix "C-c"
-   "mr" 'nmuth/project-shell-cd-to-root)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
-(load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/dlang.el")
 (load-file "~/.emacs.d/javascript.el")
+(load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
+(load-file "~/.emacs.d/project-shell-commands.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; final startup tasks
@@ -257,6 +198,7 @@
 (projectile-global-mode +1)
 (tool-bar-mode 0)
 (tabbar-mode 0)
+(scroll-bar-mode 0)
 
 ;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
 ;; of the list so that we can easily override it for particular modes. (add-hook

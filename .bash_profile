@@ -44,7 +44,7 @@ alias fuck='sudo $(history -p !!)'
 
 # function to count lines of code in a directory, excluding node_modules or
 # public/libs
-function sloc() {
+function m_sloc() {
 	find . -path ./node_modules -prune -o \
 			-path ./bower_components -prune -o \
 			-path ./public/lib -prune -o \
