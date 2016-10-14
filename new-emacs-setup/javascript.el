@@ -33,6 +33,8 @@
   (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[s]?css\\'" . web-mode))
   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
 
 ;; npm-mode

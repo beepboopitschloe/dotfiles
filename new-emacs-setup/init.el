@@ -15,6 +15,7 @@
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
 (setq default-fill-column 80)
+(setq create-lockfiles nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some utility functions
@@ -29,10 +30,10 @@
   (interactive)
   (unless (boundp 'color-theme-initialized)
     (color-theme-initialize))
-  (color-theme-subtle-hacker))
+  (color-theme-charcoal-black))
 
 (defun nmuth/gui-setup ()
-  (nmuth/light-theme)
+  (nmuth/dark-theme)
   (exec-path-from-shell-initialize))
 
 (defun nmuth/toggle-indent-tabs-mode ()
@@ -135,10 +136,13 @@
 (use-package elixir-mode :ensure t)
 (use-package alchemist :ensure t)
 (use-package lua-mode :ensure t)
-(use-package company :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
+
+(use-package company :ensure t
+  :config
+  (setq company-idle-delay 0.1))
 
 (use-package which-key :ensure t
   :config
