@@ -9,17 +9,31 @@
 (setq org-directory "~/org")
 
 (setq org-todo-keywords
-      '((sequence "TODO" "NEXT" "STARTED" "REVIEW" "|" "DONE")
+      '(;; action items
+        (sequence "TODO" "NEXT" "STARTED" "REVIEW" "|" "DONE")
+
+        ;; blog posts
         (sequence "IDEA" "RESEARCH" "WRITING" "EDITING" "READY" "|" "PUBLISHED")
+
+        ;; shopping lists & books
+        (sequence "LISTED" "NEXT" "PURCHASED" "STARTED" "|" "DONE")
+
+        ;; misc
         (sequence "WAITING" "|" "CANCELLED" "PHONE" "MEETING")))
 
 (setq org-todo-keyword-faces
-      '(("TODO" :foreground "red" :weight bold)
+      '(;; action items
+        ("TODO" :foreground "red" :weight bold)
         ("NEXT" :foreground "deep sky blue" :weight bold)
         ("STARTED" :foreground "tomato2" :weight bold)
         ("REVIEW" :foreground "dark violet" :weight bold)
         ("DONE" :foreground "forest green" :weight bold)
 
+        ;; shopping lists & books
+        ("LISTED" :foreground "red" :weight bold)
+        ("PURCHASED" :foreground "deep sky blue" :weight bold)
+
+        ;; blog posts
         ("IDEA" :foreground "royal blue" :weight bold)
         ("RESEARCH" :foreground "deep sky blue" :weight bold)
         ("WRITING" :foreground "tomato2" :weight bold)
@@ -27,6 +41,7 @@
         ("READY" :foreground "green yellow" :weight bold)
         ("PUBLISHED" :foreground "forest green" :weight bold)
 
+        ;; misc
         ("WAITING" :foreground "red" :weight bold)
         ("CANCELLED" :foreground "forest green" :weight bold)
         ("MEETING" :foreground "forest green" :weight bold)))
@@ -69,7 +84,7 @@
                     :keymaps 'org-mode-map
                     "t" 'org-todo)
 
-(general-define-key :states '(normal)
+(general-define-key :states '(normal visual insert emacs)
                     :keymaps 'org-agenda-mode-map
                     "j" 'evil-next-line
                     "k" 'evil-previous-line)

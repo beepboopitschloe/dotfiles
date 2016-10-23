@@ -24,9 +24,6 @@ term_is_emacs=$([[ $TERM = "eterm-color" ]])
 # alias to reload the bash profile
 alias reload="source ~/.bash_profile"
 
-# source environment vars
-source ~/.env_vars.sh
-
 # pretty command prompt
 export PS1="$COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
 
@@ -35,6 +32,9 @@ export PRET=~/Projects
 
 # source git-completion
 source $PRET/dotfiles/git-completion.bash
+
+# source local configuration
+source ~/.env_vars.sh
 
 ##################
 # define functions

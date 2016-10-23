@@ -1,9 +1,13 @@
 (message "configuring javascript...")
 
 (defun nmuth/web-mode-javascript-setup ()
+  (interactive)
   (web-mode-set-content-type "jsx")
-  (npm-mode)
-  (company-mode))
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (company-mode +1))
 
 (defun nmuth/web-mode-hook ()
   (if (equal web-mode-content-type "javascript")

@@ -80,6 +80,7 @@
 (use-package restclient :ensure t)
 (use-package ledger-mode :ensure t)
 (use-package lua-mode :ensure t)
+(use-package flymake :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -181,6 +182,7 @@
 
 (load-file "~/.emacs.d/dlang.el")
 (load-file "~/.emacs.d/elixir.el")
+(load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
