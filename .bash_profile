@@ -139,6 +139,14 @@ fi
 export NVM_DIR="$HOME/.nvm"
 . "$(brew --prefix nvm)/nvm.sh"
 
+function org_push {
+	rsync -va ~/org nmuth@noahmuth.com:storage
+}
+
+function org_pull {
+	rsync -va nmuth@noahmuth.com:storage/org ~
+}
+
 ###-tns-completion-start-###
 if [ -f /Users/noah.muth/.tnsrc ]; then 
     source /Users/noah.muth/.tnsrc 
