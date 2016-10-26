@@ -3,6 +3,12 @@
 ;;
 ;; https://sam217pa.github.io/2016/09/02/how-to-build-your-own-spacemacs/
 
+;; keep emacs quiet about this missing in init.el
+;;(package-initialize)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/swiper/")
+(add-to-list 'load-path "~/.emacs.d/vendor/counsel-projectile/")
+
 (setq delete-old-versions -1)
 (setq version-control t)
 (setq vc-make-backup-files t)
@@ -16,6 +22,8 @@
 (setq sentence-end-double-space nil)
 (setq default-fill-column 80)
 (setq create-lockfiles nil)
+(setq split-height-threshold nil)
+(setq split-width-threshold 0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some utility functions
@@ -65,6 +73,7 @@
 ;; packages that don't require configuration
 
 (use-package evil :ensure t)
+(use-package evil-escape :ensure t)
 (use-package magit :ensure t)
 (use-package evil-magit :ensure t)
 (use-package shell-pop :ensure t)
@@ -73,9 +82,6 @@
 (use-package smart-tabs-mode :ensure t)
 (use-package exec-path-from-shell :ensure t)
 (use-package restart-emacs :ensure t)
-(use-package swiper :ensure t)
-(use-package counsel :ensure t)
-(use-package counsel-projectile :ensure t)
 (use-package ag :ensure t)
 (use-package restclient :ensure t)
 (use-package ledger-mode :ensure t)
@@ -93,14 +99,22 @@
   :config
   (setq which-key-idle-delay 0.25))
 
-(use-package ivy :ensure t
-  :config
-  (setq ivy-height 15))
-
 (use-package projectile :ensure t
   :config
   (setq projectile-completion-system 'ivy)
   (setq projectile-switch-project-action 'projectile-dired))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; packages in the vendor directory
+
+(load-library "swiper")
+
+(load-library "ivy")
+(setq ivy-height 15)
+
+(load-library "counsel")
+
+(load-library "counsel-projectile")
 
 ;;;;;;;;;;;;;;;
 ;; key bindings
@@ -177,6 +191,9 @@
    "wm" 'spacemacs/toggle-maximize-buffer
    ))
 
+(general-define-key :states '(visual insert)
+                    "ESC" 'evil-escape)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
@@ -198,8 +215,10 @@
 (linum-relative-global-mode)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
-(tabbar-mode 0)
-(scroll-bar-mode 0)
+(when (fboundp 'tabbar-mode)
+  (tabbar-mode 0))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode 0))
 
 ;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
 ;; of the list so that we can easily override it for particular modes. (add-hook
@@ -208,4 +227,14 @@
 ;; open an org file if we're starting emacs now
 (unless (boundp 'nmuth/first-startup-finished)
   (nmuth/first-load-setup))
+
+(custom-set-faces
+ '(magit-diff-added ((((type tty)) (:foreground "green"))))
+ '(magit-diff-added-highlight ((((type tty)) (:foreground "LimeGreen"))))
+ '(magit-diff-context-highlight ((((type tty)) (:foreground "default"))))
+ '(magit-diff-file-heading ((((type tty)) nil)))
+ '(magit-diff-removed ((((type tty)) (:foreground "red"))))
+ '(magit-diff-removed-highlight ((((type tty)) (:foreground "IndianRed"))))
+ '(magit-section-highlight ((((type tty)) nil))))
+
 (defvar nmuth/first-startup-finished t)
