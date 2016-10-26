@@ -22,6 +22,8 @@
 (setq sentence-end-double-space nil)
 (setq default-fill-column 80)
 (setq create-lockfiles nil)
+(setq split-height-threshold nil)
+(setq split-width-threshold 0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some utility functions
