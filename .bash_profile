@@ -143,8 +143,16 @@ function org_push {
 	rsync -va ~/org nmuth@noahmuth.com:storage
 }
 
+function org_check_push {
+	rsync -vna ~/org nmuth@noahmuth.com:storage
+}
+
 function org_pull {
 	rsync -va nmuth@noahmuth.com:storage/org ~
+}
+
+function org_check_pull {
+	rsync -vna nmuth@noahmuth.com:storage/org ~
 }
 
 ###-tns-completion-start-###
