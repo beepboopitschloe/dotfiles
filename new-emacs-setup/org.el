@@ -82,7 +82,8 @@
 
 (general-define-key :states '(normal)
                     :keymaps 'org-mode-map
-                    "t" 'org-todo)
+                    "t" 'org-todo
+		    "C-i" 'evil-toggle-fold)
 
 (general-define-key :states '(normal visual insert emacs)
                     :keymaps 'org-agenda-mode-map
