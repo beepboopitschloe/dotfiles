@@ -1,10 +1,11 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; sensible defaults from:
-;;
-;; https://sam217pa.github.io/2016/09/02/how-to-build-your-own-spacemacs/
+;;; package --- init.el
+;;; Commentary:
+;;; Code:
 
-;; keep emacs quiet about this missing in init.el
-;;(package-initialize)
+;; sensible defaults from https://sam217pa.github.io/2016/09/02/how-to-build-your-own-spacemacs/
+
+;; this function is called in package.el but the string has to be present in init.el
+;; (package-initialize)
 
 (add-to-list 'load-path "~/.emacs.d/vendor/swiper/")
 (add-to-list 'load-path "~/.emacs.d/vendor/counsel-projectile/")
@@ -20,7 +21,7 @@
 (setq coding-system-for-read 'utf-8)
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
-(setq default-fill-column 80)
+(setq fill-column 80)
 (setq create-lockfiles nil)
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
@@ -29,34 +30,39 @@
 ;; some utility functions
 
 (defun nmuth/light-theme ()
+  "Enable light GUI theme."
   (interactive)
   (unless (boundp 'color-theme-initialized)
     (color-theme-initialize))
   (color-theme-feng-shui))
 
 (defun nmuth/dark-theme ()
+  "Enable dark GUI theme."
   (interactive)
   (unless (boundp 'color-theme-initialized)
     (color-theme-initialize))
   (color-theme-charcoal-black)) ; (color-theme-jonadabian-slate))
 
 (defun nmuth/gui-setup ()
+  "Perform GUI-specific setup."
   (nmuth/dark-theme)
   (exec-path-from-shell-initialize))
 
 (defun nmuth/toggle-indent-tabs-mode ()
+  "Toggle whether or not to indent with tabs."
   (interactive)
   (setq indent-tabs-mode (not indent-tabs-mode))
   (message "tabs: %s" (if indent-tabs-mode "yes" "no")))
 
 (defun current-major-mode ()
+  "Check the current major mode."
   (interactive)
   (message "current major mode is %s" major-mode))
 
 (defun nmuth/first-load-setup ()
-  ;; configure GUI things if we're running in a GUI
+  "Perform first-load setup functions."
   (when (memq window-system '(mac ns))
-    (nmuth/gui-setup))
+    (nmuth/gui-setup)) ; set up GUI things if we're running in a GUI
   (find-file "~/org/index.org"))
 
 ;; portable 'close-window
@@ -87,6 +93,7 @@
 (use-package ledger-mode :ensure t)
 (use-package lua-mode :ensure t)
 (use-package flymake :ensure t)
+(use-package flycheck :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -215,6 +222,8 @@
 (linum-relative-global-mode)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
+(global-company-mode)
+(global-flycheck-mode)
 (when (fboundp 'tabbar-mode)
   (tabbar-mode 0))
 (when (fboundp 'scroll-bar-mode)
