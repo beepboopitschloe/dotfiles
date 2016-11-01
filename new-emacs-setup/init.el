@@ -206,6 +206,7 @@
 
 (load-file "~/.emacs.d/dlang.el")
 (load-file "~/.emacs.d/elixir.el")
+(load-file "~/.emacs.d/elm.el")
 (load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/org.el")
