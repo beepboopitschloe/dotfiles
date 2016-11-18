@@ -6,6 +6,7 @@
   (tide-setup)
   (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq web-mode-code-indent-offset 2)
   (eldoc-mode +1)
   (company-mode +1))
 

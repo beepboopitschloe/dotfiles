@@ -140,19 +140,11 @@ export NVM_DIR="$HOME/.nvm"
 . "$(brew --prefix nvm)/nvm.sh"
 
 function org_push {
-	rsync -va ~/org nmuth@noahmuth.com:storage
+	echo '(cd ~/org && git add -A && git commit -m "updated $(time)" && git push)'
 }
 
-function org_check_push {
-	rsync -vna ~/org nmuth@noahmuth.com:storage
-}
-
-function org_pull {
-	rsync -va nmuth@noahmuth.com:storage/org ~
-}
-
-function org_check_pull {
-	rsync -vna nmuth@noahmuth.com:storage/org ~
+function org_fetch {
+	(cd ~/org && git pull)
 }
 
 ###-tns-completion-start-###

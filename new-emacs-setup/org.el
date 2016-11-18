@@ -50,8 +50,20 @@
 (setq org-agenda-files (list org-directory))
 (setq org-startup-indented t)
 
+(defun nmuth/org-push ()
+  "Push org files to git repository."
+  (interactive)
+  (shell-command "cd ~/org && git add -A && git commit -m \"update $(date)\" && git push"))
+
+(defun nmuth/org-fetch ()
+  "Pull org files from git repository."
+  (interactive)
+  (shell-command "cd ~/org && git pull"))
+
 (defun nmuth/org-clocktable-indent-string (level)
-  "Indent an org-mode clocktable without using wacky Latex characters."
+  "Indent an 'org-mode' clocktable without using wacky Latex characters.
+
+LEVEL: number of spaces to offset the string."
   (if (= level 1)
       ""
     (let ((str " "))
@@ -70,11 +82,15 @@
                     "m a" 'org-agenda
 		    "m C" 'org-clock-update-time-maybe
                     "m d" 'org-deadline
+
+                    "m P" 'nmuth/org-push
+                    "m F" 'nmuth/org-fetch
+
+                    "m I" 'org-clock-in
+                    "m o" 'org-open-at-point
+                    "m O" 'org-clock-out
                     "m s" 'org-schedule
                     "m t" 'org-todo
-                    "m o" 'org-open-at-point
-                    "m I" 'org-clock-in
-                    "m O" 'org-clock-out
 
                     "m S" '(:ignore t :which-key "subtree")
                     "m Sh" 'org-promote-subtree
