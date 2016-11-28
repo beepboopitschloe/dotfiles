@@ -1,9 +1,9 @@
 (message "configuring project shell commands...")
 
-(defun nmuth/shell-buffer-name (project)
-  (format "*%s-shell*" project))
+(defun nmuth/term-buffer-name (project)
+  (format "*%s-term*" project))
 
-(defun nmuth/spawn-shell (name &optional directory)
+(defun nmuth/spawn-term (name &optional directory)
   "Create a shell buffer with the given name"
   (interactive "MName of shell buffer to create: ")
   (let ((buf (get-buffer-create (generate-new-buffer-name name))))
@@ -23,23 +23,23 @@
 				 (split-string project-root "/")
 			       (error (format "bad project def: %S" project))))
 	 (project-name (nth (- (length project-path-parts) 2) project-path-parts))
-	 (shell-buffer-name (nmuth/shell-buffer-name project-name)))
-    (list 'name project-name 'root project-root 'shell-buffer-name shell-buffer-name 'project project)))
+	 (term-buffer-name (nmuth/term-buffer-name project-name)))
+    (list 'name project-name 'root project-root 'term-buffer-name term-buffer-name 'project project)))
 
 (defun nmuth/find-or-open-shell-for-current-project ()
   (interactive)
   (let* ((project (nmuth/project-info))
 	 (project-name (plist-get project 'name))
 	 (project-root (plist-get project 'root))
-	 (buffer-name (plist-get project 'shell-buffer-name))
-	 (existing-shell-buffer (get-buffer buffer-name)))
-    (if existing-shell-buffer
+	 (buffer-name (plist-get project 'term-buffer-name))
+	 (existing-term-buffer (get-buffer buffer-name)))
+    (if existing-term-buffer
 	(progn
-	  (process-send-string existing-shell-buffer (format "cd %s\n" project-root))
-	  (process-send-string existing-shell-buffer "echo ''\n")
-	  (pop-to-buffer existing-shell-buffer))
+	  (process-send-string existing-term-buffer (format "cd %s\n" project-root))
+	  (process-send-string existing-term-buffer "echo ''\n")
+	  (pop-to-buffer existing-term-buffer))
       (progn
-	(pop-to-buffer (nmuth/spawn-shell buffer-name project-root))
+	(pop-to-buffer (nmuth/spawn-term buffer-name project-root))
 	(cd project-root)))))
 
 (defun nmuth/project-shell-cd-to-root (&optional project-info)
@@ -48,7 +48,7 @@
 		      project-info
 		    (nmuth/project-info)))
 	 (root (plist-get project 'root))
-	 (buffer-name (plist-get project 'shell-buffer-name))
+	 (buffer-name (plist-get project 'term-buffer-name))
 	 (buffer (get-buffer buffer-name)))
     (if buffer
 	(progn
