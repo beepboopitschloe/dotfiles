@@ -60,10 +60,10 @@
             (nmuth/load-file-from-gopath-or-download "golang.org/x/tools/cmd/guru"
                                                      "go-guru.el")
             (nmuth/load-file-from-gopath-or-download "github.com/dougm/goflymake"
-                                                     "go-flymake.el")
+                                                     "go-flycheck.el")
             (nmuth/load-file-from-gopath-or-download "github.com/golang/lint"
                                                      "misc/emacs/golint.el")
-            (require 'flymake))
+            (require 'go-flycheck))
   :ensure t)
 
 (general-define-key :states '(normal visual insert emacs)

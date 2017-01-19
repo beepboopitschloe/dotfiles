@@ -1,10 +1,33 @@
+(message "configuring org mode...")
+
 (defun nmuth/org-mode-hook ()
   (interactive)
   (linum-mode 0)) ; not working for some reason
 
-(add-hook 'org-mode-hook 'nmuth/org-mode-hook)
+(defun nmuth/org-push ()
+  "Push org files to git repository."
+  (interactive)
+  (shell-command "cd ~/org && git add -A && git commit -m \"update $(date)\" && git push"))
 
-(message "configuring org mode...")
+(defun nmuth/org-fetch ()
+  "Pull org files from git repository."
+  (interactive)
+  (shell-command "cd ~/org && git pull"))
+
+(defun nmuth/org-clocktable-indent-string (level)
+  "Indent an 'org-mode' clocktable without using wacky Latex characters.
+
+LEVEL: number of spaces to offset the string."
+  (if (= level 1)
+      ""
+    (let ((str " "))
+      (while (> level 1)
+	(setq level (1- level))
+	(setq str (concat str "- ")))
+      (concat str "- "))))
+
+
+(add-hook 'org-mode-hook 'nmuth/org-mode-hook)
 
 (setq org-directory "~/org")
 
@@ -50,28 +73,6 @@
 (setq org-agenda-files (list org-directory))
 (setq org-startup-indented t)
 
-(defun nmuth/org-push ()
-  "Push org files to git repository."
-  (interactive)
-  (shell-command "cd ~/org && git add -A && git commit -m \"update $(date)\" && git push"))
-
-(defun nmuth/org-fetch ()
-  "Pull org files from git repository."
-  (interactive)
-  (shell-command "cd ~/org && git pull"))
-
-(defun nmuth/org-clocktable-indent-string (level)
-  "Indent an 'org-mode' clocktable without using wacky Latex characters.
-
-LEVEL: number of spaces to offset the string."
-  (if (= level 1)
-      ""
-    (let ((str " "))
-      (while (> level 1)
-	(setq level (1- level))
-	(setq str (concat str "- ")))
-      (concat str "- "))))
-
 (advice-add 'org-clocktable-indent-string :override #'nmuth/org-clocktable-indent-string)
 
 (general-define-key :states '(normal visual insert emacs)
@@ -100,6 +101,11 @@ LEVEL: number of spaces to offset the string."
                     :keymaps 'org-mode-map
                     "t" 'org-todo
 		    "C-i" 'evil-toggle-fold)
+
+(general-define-key :states '(normal visual insert emacs)
+		    :keymaps 'org-mode-map
+
+		    "C-c l" 'org-store-link)
 
 (general-define-key :states '(normal visual insert emacs)
                     :keymaps 'org-agenda-mode-map

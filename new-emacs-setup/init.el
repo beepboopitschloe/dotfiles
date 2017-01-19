@@ -92,7 +92,6 @@
 (use-package restclient :ensure t)
 (use-package ledger-mode :ensure t)
 (use-package lua-mode :ensure t)
-(use-package flymake :ensure t)
 (use-package flycheck :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
