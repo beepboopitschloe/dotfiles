@@ -198,7 +198,7 @@
    ))
 
 (general-define-key :states '(visual insert)
-                    "ESC" 'evil-escape)
+		    "ESC" 'evil-escape)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
@@ -208,8 +208,10 @@
 (load-file "~/.emacs.d/elm.el")
 (load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
-(load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/lisp.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
+(load-file "~/.emacs.d/org.el")
+(load-file "~/.emacs.d/python.el")
 (load-file "~/.emacs.d/project-shell-commands.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -219,7 +221,7 @@
 (evil-mode)
 (ivy-mode)
 (which-key-mode)
-(linum-relative-global-mode)
+(linum-relative-global-mode 0)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
 (global-company-mode)

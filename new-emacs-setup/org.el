@@ -83,6 +83,7 @@ LEVEL: number of spaces to offset the string."
                     "m a" 'org-agenda
 		    "m C" 'org-clock-update-time-maybe
                     "m d" 'org-deadline
+		    "m D" 'org-update-all-dblocks
 
                     "m P" 'nmuth/org-push
                     "m F" 'nmuth/org-fetch
@@ -90,6 +91,7 @@ LEVEL: number of spaces to offset the string."
                     "m I" 'org-clock-in
                     "m o" 'org-open-at-point
                     "m O" 'org-clock-out
+		    "m q" 'org-fill-paragraph
                     "m s" 'org-schedule
                     "m t" 'org-todo
 
