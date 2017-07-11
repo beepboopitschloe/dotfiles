@@ -110,6 +110,12 @@
   (setq projectile-completion-system 'ivy)
   (setq projectile-switch-project-action 'projectile-dired))
 
+(use-package emojify :ensure t
+  :config
+  (setq emojify-emoji-styles '(unicode))
+  (setq emojify-display-style 'unicode)
+  (global-emojify-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages in the vendor directory
 
@@ -147,6 +153,9 @@
    "bp" 'previous-buffer
    "br" 'rename-buffer
 
+   "e" '(:ignore t :which-key "emoji")
+   "ei" 'emojify-insert-emoji
+
    "f" '(:ignore t :which-key "file")
    "ff" '(counsel-find-file :which-key "find file")
    "fr" 'counsel-recentf
@@ -167,6 +176,7 @@
    "oa" 'org-agenda
    "oo" (lambda () (interactive) (find-file "~/org/index.org"))
    "oO" 'org-clock-out
+   "ol" 'org-store-link
 
    "p" '(:ignore t :which-key "projectile")
    "pa" 'projectile-ag
@@ -208,6 +218,7 @@
 (load-file "~/.emacs.d/elm.el")
 (load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
+(load-file "~/.emacs.d/nim.el")
 (load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/mac-launchpad.el")
 (load-file "~/.emacs.d/project-shell-commands.el")
@@ -219,7 +230,6 @@
 (evil-mode)
 (ivy-mode)
 (which-key-mode)
-(linum-relative-global-mode)
 (projectile-global-mode +1)
 (tool-bar-mode 0)
 (global-company-mode)
