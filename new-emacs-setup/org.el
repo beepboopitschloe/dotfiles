@@ -23,9 +23,8 @@ LEVEL: number of spaces to offset the string."
     (let ((str " "))
       (while (> level 1)
 	(setq level (1- level))
-	(setq str (concat str "- ")))
-      (concat str "- "))))
-
+	(setq str (concat str "-")))
+      (concat str "> "))))
 
 (add-hook 'org-mode-hook 'nmuth/org-mode-hook)
 
@@ -38,8 +37,11 @@ LEVEL: number of spaces to offset the string."
         ;; blog posts
         (sequence "IDEA" "RESEARCH" "WRITING" "EDITING" "READY" "|" "PUBLISHED")
 
-        ;; shopping lists & books
-        (sequence "LISTED" "NEXT" "PURCHASED" "STARTED" "|" "DONE")
+        ;; shopping lists
+        (sequence "MAYBE" "LISTED" "BUYNEXT" "|" "PURCHASED")
+
+	;; books
+	(sequence "OWNED" "READNEXT" "READING" "|" "DONEREADING")
 
         ;; misc
         (sequence "WAITING" "|" "CANCELLED" "PHONE" "MEETING")))
@@ -52,9 +54,17 @@ LEVEL: number of spaces to offset the string."
         ("REVIEW" :foreground "dark violet" :weight bold)
         ("DONE" :foreground "forest green" :weight bold)
 
-        ;; shopping lists & books
-        ("LISTED" :foreground "red" :weight bold)
-        ("PURCHASED" :foreground "deep sky blue" :weight bold)
+        ;; shopping lists
+        ("MAYBE" :foreground "red" :weight bold)
+        ("LISTED" :foreground "deep sky blue" :weight bold)
+        ("BUYNEXT" :foreground "dark violet" :weight bold)
+        ("PURCHASED" :foreground "forest green" :weight bold)
+
+	;; books
+        ("OWNED" :foreground "red" :weight bold)
+        ("READNEXT" :foreground "deep sky blue" :weight bold)
+        ("READING" :foreground "tomato2" :weight bold)
+        ("DONEREADING" :foreground "forest green" :weight bold)
 
         ;; blog posts
         ("IDEA" :foreground "royal blue" :weight bold)

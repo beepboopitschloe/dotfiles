@@ -36,7 +36,7 @@
 (defun nmuth/go-mode-hook ()
   (interactive)
   (add-hook 'before-save-hook 'gofmt-before-save t)
-  (setq company-backend 'company-go)
+  (set (make-local-variable 'company-backends) '(company-go))
   (company-mode +1)
   (go-eldoc-setup))
 

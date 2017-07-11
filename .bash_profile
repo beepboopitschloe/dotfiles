@@ -100,10 +100,7 @@ function notify() {
 }
 
 # pretty-print json output
-function json() {
-	cmd=$@
-	$cmd | python -m json.tool
-}
+alias json='python -m json.tool'
 
 # curl shortcuts
 function curl-get() {
