@@ -39,64 +39,59 @@ source ~/.env_vars.sh
 ##################
 # define functions
 
+# edit a file
+alias e="$EDITOR"
+
 # redo the last command as sudo
 alias fuck='sudo $(history -p !!)'
 
 # function to count lines of code in a directory, excluding node_modules or
 # public/libs
 function m_sloc() {
-	find . -path ./node_modules -prune -o \
-			-path ./bower_components -prune -o \
-			-path ./public/lib -prune -o \
-			-path ./public/libs -prune -o \
-			-path ./*/lib -prune -o \
-			-path ./*/dist -prune -o \
-			-path ./*/build -prune -o \
-			-name '*.js' -o \
-			-name '*.scss' -o \
-			-name '*.less' -o \
-			-name '*.c' -o \
-			-name '*.h' -o \
-			-name '*.rb' -o \
-			-name '*.lisp' \
-		| xargs wc -l
+    find . -path ./node_modules -prune -o \
+	 -path ./bower_components -prune -o \
+	 -path ./public/lib -prune -o \
+	 -path ./public/libs -prune -o \
+	 -path ./*/lib -prune -o \
+	 -path ./*/dist -prune -o \
+	 -path ./*/build -prune -o \
+	 -name '*.js' -o \
+	 -name '*.scss' -o \
+	 -name '*.less' -o \
+	 -name '*.c' -o \
+	 -name '*.h' -o \
+	 -name '*.rb' -o \
+	 -name '*.lisp' \
+	| xargs wc -l
 }
 
 function pfctl_block_rule() {
-	echo "block drop quick on lo0 proto tcp from any to any port = $1"
+    echo "block drop quick on lo0 proto tcp from any to any port = $1"
 }
 
 # block a port
 function pblock() {
-	port=$1
-	if [ -z "$port" ]; then
-		echo "Usage: pblock <port>"
-		return 1;
-	fi
+    port=$1
+    if [ -z "$port" ]; then
+	echo "Usage: pblock <port>"
+	return 1;
+    fi
 
-	(sudo pfctl -sr 2>/dev/null; echo "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
-	echo $(sudo pfctl -sr)
+    (sudo pfctl -sr 2>/dev/null; echo "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
+    echo $(sudo pfctl -sr)
 }
 
 # unblock a port
 function punblock() {
-	port=$1
+    port=$1
 
-	if [ -z "$port" ]; then
-		echo "Usage: punblock <port>"
-		return 1;
-	fi
+    if [ -z "$port" ]; then
+	echo "Usage: punblock <port>"
+	return 1;
+    fi
 
-	(sudo pfctl -sr 2>/dev/null | fgrep -v "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
-	echo $(sudo pfctl -sr)
-}
-
-# function to make a notification on OS X
-function notify() {
-	title=$1
-	msg=$2
-
-	osascript -e "display notification \"$msg\" with title \"$title\""
+    (sudo pfctl -sr 2>/dev/null | fgrep -v "$(pfctl_block_rule $port)") | sudo pfctl -e -f -
+    echo $(sudo pfctl -sr)
 }
 
 # pretty-print json output
@@ -104,24 +99,31 @@ alias json='python -m json.tool'
 
 # curl shortcuts
 function curl-get() {
-	curl -X GET -H "Content-Type: application/json" $@
+    curl -X GET -H "Content-Type: application/json" $@
 }
 
 function curl-post() {
-	curl -X POST -H "Content-Type: application/json" $@
+    curl -X POST -H "Content-Type: application/json" $@
 }
 
 function curl-put() {
-	curl -X PUT -H "Content-Type: application/json" $@
+    curl -X PUT -H "Content-Type: application/json" $@
 }
 
 function curl-del() {
-	curl -X DELETE -H "Content-Type: application/json" $@
+    curl -X DELETE -H "Content-Type: application/json" $@
 }
 
 # which process is using port $1?
 function who_is_using() {
-	lsof -n -i4TCP:$1 | grep LISTEN
+    lsof -n -i4TCP:$1 | grep LISTEN
+}
+
+# generate & open mermaidjs diagrams
+function mermaid() {
+    file=$(mktemp "$TMPDIR/$(uuidgen).png")
+    mmdc -i $1 -o $file
+    open $file
 }
 
 alias vihosts='sudo vim /etc/hosts'
@@ -130,22 +132,24 @@ alias vihosts='sudo vim /etc/hosts'
 echo "Shiny. Let's be bad guys."
 
 if [ $term_is_iterm2 ]; then
-  source $HOME/.iterm2_shell_integration.bash
+    source $HOME/.iterm2_shell_integration.bash
 fi
 
 export NVM_DIR="$HOME/.nvm"
 . "$(brew --prefix nvm)/nvm.sh"
 
 function org_push {
-	echo '(cd ~/org && git add -A && git commit -m "updated $(time)" && git push)'
+    echo '(cd ~/org && git add -A && git commit -m "updated $(time)" && git push)'
 }
 
 function org_fetch {
-	(cd ~/org && git pull)
+    (cd ~/org && git pull)
 }
 
 ###-tns-completion-start-###
-if [ -f /Users/noah.muth/.tnsrc ]; then 
-    source /Users/noah.muth/.tnsrc 
+if [ -f /Users/noah.muth/.tnsrc ]; then
+    source /Users/noah.muth/.tnsrc
 fi
 ###-tns-completion-end-###
+
+export PATH="$HOME/.cargo/bin:$PATH"

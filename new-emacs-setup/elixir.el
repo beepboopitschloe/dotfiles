@@ -13,11 +13,27 @@
   (add-hook 'alchemist-iex-mode-hook #'nmuth/iex-hook))
 
 (general-define-key :states '(normal visual insert emacs)
-                    :keymaps 'alchemist-mode-map
-                    :prefix "SPC"
-                    :non-normal-prefix "C-c"
+		    :keymaps 'alchemist-mode-map
+		    :prefix "SPC"
+		    :non-normal-prefix "C-c"
 
-                    "mi" '(:ignore t :which-key "Iex")
-                    "mib" 'alchemist-iex-compile-this-buffer
-                    
-                    "mx" 'alchemist-mix)
+		    "mi" '(:ignore t :which-key "Iex")
+		    "mib" 'alchemist-iex-compile-this-buffer
+
+		    "mx" 'alchemist-mix)
+
+;;;;;;;;;
+;; erlang
+
+(defun nmuth/load-erlang ()
+  (interactive)
+  (let* ((erl-path "/usr/local/Cellar/erlang/19.2/lib/erlang/")
+	 (erl-emacs-path (concat erl-path "lib/tools-2.9/emacs/"))
+	 (erl-exec-path (concat erl-path "bin")))
+    (setq load-path (cons erl-emacs-path load-path))
+    (require 'erlang-start)
+    (setq erlang-root-dir erl-path)
+    (setq exec-path (cons erl-exec-path exec-path))
+    (setq erlang-man-root-dir (concat erl-path "man"))))
+
+(nmuth/load-erlang)

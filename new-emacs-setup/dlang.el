@@ -15,7 +15,15 @@
 
 (use-package d-mode :ensure t
   :config
-  (add-hook 'd-mode-hook #'nmuth/d-mode-hook))
+  (add-hook 'd-mode-hook 'nmuth/d-mode-hook))
+
+(use-package flycheck-dmd-dub :ensure t
+  :config
+  (add-hook 'd-mode-hook 'flycheck-dmd-dub-set-variables))
+
+(use-package company-dcd :ensure t
+  :config
+  (add-hook 'd-mode-hook 'company-dcd-mode))
 
 (general-define-key :states '(normal visual insert emacs)
                     :keymaps 'd-mode-map

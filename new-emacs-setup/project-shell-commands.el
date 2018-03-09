@@ -15,16 +15,13 @@
     buf))
 
 (defun nmuth/project-info (&optional explicit-project)
-  (let* ((project (if explicit-project
-		      explicit-project
-		    (project-current)))
-	 (project-root (cdr project))
-	 (project-path-parts (if project-root
-				 (split-string project-root "/")
-			       (error (format "bad project def: %S" project))))
-	 (project-name (nth (- (length project-path-parts) 2) project-path-parts))
+  (let* ((project-root (projectile-project-root))
+					;(project-path-parts (if project-root
+					;(split-string project-root "/")
+					;(error (format "bad project def: %S" project))))
+	 (project-name (projectile-project-name))
 	 (term-buffer-name (nmuth/term-buffer-name project-name)))
-    (list 'name project-name 'root project-root 'term-buffer-name term-buffer-name 'project project)))
+    (list 'name project-name 'root project-root 'term-buffer-name term-buffer-name)))
 
 (defun nmuth/find-or-open-shell-for-current-project ()
   (interactive)
@@ -79,15 +76,24 @@
     (message "running: 'cd %s && %s'" project-root command)
     (nmuth/shell-command-in-directory project-root command)))
 
+(defun nmuth/projectile-term-at-root ()
+  (interactive)
+  (projectile-run-term (getenv "SHELL")))
+
+(def-projectile-commander-method ?t
+  "Open a terminal at project root"
+  (nmuth/projectile-term-at-root))
+
 (general-define-key :states '(normal insert visual emacs)
 		    :prefix "SPC"
 		    :non-normal-prefix "C-c"
 
-		    "ps" 'nmuth/find-or-open-shell-for-current-project
-		    "pc" 'nmuth/shell-command-in-project-root)
+		    "ps" 'nmuth/projectile-term-at-root
+		    "pc" 'nmuth/shell-command-in-project-root
+		    "pC" 'projectile-commander)
 
 (general-define-key :states '(normal visual insert emacs)
-                    :keymaps 'shell-mode-map
-                    :prefix "SPC"
-                    :non-normal-prefix "C-c"
-                    "mr" 'nmuth/project-shell-cd-to-root)
+		    :keymaps 'shell-mode-map
+		    :prefix "SPC"
+		    :non-normal-prefix "C-c"
+		    "mr" 'nmuth/project-shell-cd-to-root)

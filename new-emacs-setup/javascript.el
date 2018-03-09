@@ -37,17 +37,28 @@
   :config
   (add-hook 'web-mode-hook 'nmuth/web-mode-hook)
   (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.[s]?css\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
+
+(defun nmuth/less-css-mode-hook ()
+  (setq indent-tabs-mode nil)
+  (setq css-indent-offset 2))
+
+(use-package less-css-mode :ensure t
+  :config
+  (add-hook 'less-css-mode-hook 'nmuth/less-css-mode-hook)
+  (add-to-list 'auto-mode-alist '("\\.less\\'" . less-css-mode)))
 
 ;; npm-mode
 ;; TODO: npm-mode-npm-run doesn't seem to reuse its shell buffer, either need to
 ;; submit a PR or write my own client
 (use-package npm-mode :ensure t)
+
+(setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
 
 (general-define-key :states '(normal visual insert emacs)
 		    :keymaps 'web-mode-map
@@ -61,4 +72,19 @@
 		    "mnn" 'npm-mode-npm-inig
 		    "mnr" 'npm-mode-npm-run
 		    "mnu" 'npm-mode-npm-uninstall
-		    "mnv" 'npm-mode-visit-project-file)
+		    "mnv" 'npm-mode-visit-project-file
+
+		    "md" 'tide-jump-to-definition
+		    "mi" 'tide-jump-to-implementation
+		    "mr" 'tide-references
+		    "mR" 'tide-rename-symbol)
+
+
+(general-define-key :states '(normal visual insert emacs)
+		    :keymaps 'tide-references-mode-map
+
+		    "RET" 'tide-goto-reference
+		    "n" 'tide-find-next-reference
+		    "p" 'tide-find-previous-reference
+		    "q" 'quit-window)
+

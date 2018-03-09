@@ -3,3 +3,9 @@ SessionDesktop.el
 
 # ignore downloaded packages
 elpa
+
+# fucking packages keep dumping garbage in my .emacs.d
+.cache
+url
+anaconda-mode
+auto-save-list

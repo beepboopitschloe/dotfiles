@@ -21,10 +21,40 @@
 (setq coding-system-for-read 'utf-8)
 (setq coding-system-for-write 'utf-8)
 (setq sentence-end-double-space nil)
-(setq fill-column 80)
 (setq create-lockfiles nil)
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
+
+(setq-default fill-column 80)
+
+;;;;;;;;;;;;;;;;;;;;
+;; C indent style
+
+(defun nmuth/setup-c-indent ()
+  (c-set-offset 'arglist-intro '+)
+  (c-set-offset 'arglist-close 0)
+  (c-set-offset 'statement-cont '-))
+
+(setq-default c-basic-offset 2)
+(add-hook 'c-mode-common-hook #'nmuth/setup-c-indent)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; make copy/paste work
+
+(defun nmuth/pbcopy ()
+  (interactive)
+  (shell-command-on-region (region-beginning) (region-end) "reattach-to-user-namespace pbcopy"))
+
+(defun nmuth/pbcut ()
+  (interactive)
+  (nmuth/pbcopy)
+  (delete-region (region-beginning) (region-end)))
+
+(defun nmuth/pbpaste ()
+  (interactive)
+  (let ((paste (shell-command-to-string "reattach-to-user-namespace pbpaste")))
+    (when mark-active (evil-delete (point) (mark)))
+    (insert paste)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some utility functions
@@ -32,20 +62,21 @@
 (defun nmuth/light-theme ()
   "Enable light GUI theme."
   (interactive)
-  (unless (boundp 'color-theme-initialized)
-    (color-theme-initialize))
-  (color-theme-feng-shui))
+  (progn
+    (color-theme-initialize)
+    (color-theme-feng-shui)))
 
 (defun nmuth/dark-theme ()
   "Enable dark GUI theme."
   (interactive)
-  (unless (boundp 'color-theme-initialized)
-    (color-theme-initialize))
-  (color-theme-charcoal-black)) ; (color-theme-jonadabian-slate))
+  (progn
+    (load-theme 'nord)
+    ;; (color-theme-initialize)
+    ;; (color-theme-charcoal-black)
+    )) ; (color-theme-jonadabian-slate))
 
 (defun nmuth/gui-setup ()
   "Perform GUI-specific setup."
-  (nmuth/dark-theme)
   (exec-path-from-shell-initialize))
 
 (defun nmuth/toggle-indent-tabs-mode ()
@@ -84,7 +115,6 @@
 (use-package evil-magit :ensure t)
 (use-package shell-pop :ensure t)
 (use-package linum-relative :ensure t)
-(use-package flx-ido :ensure t)
 (use-package smart-tabs-mode :ensure t)
 (use-package exec-path-from-shell :ensure t)
 (use-package restart-emacs :ensure t)
@@ -93,13 +123,20 @@
 (use-package ledger-mode :ensure t)
 (use-package lua-mode :ensure t)
 (use-package flycheck :ensure t)
+(use-package yaml-mode :ensure t)
+(use-package erc :ensure t)
+(use-package color-theme :ensure t)
+(use-package nord-theme :ensure t)
+(use-package markdown-mode :ensure t)
+(use-package haskell-mode :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
 
 (use-package company :ensure t
   :config
-  (setq company-idle-delay 0.1))
+  (setq company-idle-delay 0.1)
+  (setq company-global-modes '(not org-mode fundamental-mode text-mode)))
 
 (use-package which-key :ensure t
   :config
@@ -108,7 +145,8 @@
 (use-package projectile :ensure t
   :config
   (setq projectile-completion-system 'ivy)
-  (setq projectile-switch-project-action 'projectile-dired))
+  (setq projectile-switch-project-action 'projectile-dired)
+  (setq projectile-mode-line '(:eval (format " Projectile[%s]" (projectile-project-name)))))
 
 (use-package emojify :ensure t
   :config
@@ -131,90 +169,103 @@
 ;;;;;;;;;;;;;;;
 ;; key bindings
 
-(use-package general :ensure t
-  :config
-  (general-define-key
-   :states '(normal visual insert emacs)
-   :prefix "SPC"
-   :non-normal-prefix "C-c"
+(use-package general :ensure t)
 
-   "TAB" 'spacemacs/alternate-buffer
-   ":" 'counsel-M-x
+(general-define-key :states '(normal visual insert emacs)
+		    :prefix "SPC"
+		    :non-normal-prefix "C-c"
 
-   "a" '(:ignore t :which-key "applications")
-   "as" '(:ignore t :which-key "shells")
-   "ast" 'shell-pop
+		    "TAB" 'spacemacs/alternate-buffer
+		    ":" 'counsel-M-x
 
-   "b" '(:ignore t :which-key "buffer")
-   "bb" 'ido-switch-buffer
-   "bd" 'kill-this-buffer
-   "be" 'eval-buffer
-   "bn" 'next-buffer
-   "bp" 'previous-buffer
-   "br" 'rename-buffer
+		    "X" 'nmuth/pbcut
+		    "C" 'nmuth/pbcopy
+		    "V" 'nmuth/pbpaste
 
-   "e" '(:ignore t :which-key "emoji")
-   "ei" 'emojify-insert-emoji
+		    "a" '(:ignore t :which-key "applications")
+		    "as" '(:ignore t :which-key "shells")
+		    "ast" 'shell-pop
 
-   "f" '(:ignore t :which-key "file")
-   "ff" '(counsel-find-file :which-key "find file")
-   "fr" 'counsel-recentf
+		    "b" '(:ignore t :which-key "buffer")
+		    "bb" 'ivy-switch-buffer
+		    "bd" 'kill-this-buffer
+		    "be" 'eval-buffer
+		    "bn" 'next-buffer
+		    "bp" 'previous-buffer
+		    "br" 'rename-buffer
 
-   "g" '(:ignore t :which-key "magit")
-   "gc" 'magit-clone
-   "gs" 'magit-status
+		    "e" '(:ignore t :which-key "emoji")
+		    "ei" 'emojify-insert-emoji
 
-   "h" '(:ignore t :which-key "help")
-   "hdf" 'counsel-describe-function
-   "hdv" 'counsel-describe-variable
+		    "f" '(:ignore t :which-key "file")
+		    "ff" '(counsel-find-file :which-key "find file")
+		    "fr" 'counsel-recentf
 
-   "j=" 'spacemacs/indent-region-or-buffer
+		    "g" '(:ignore t :which-key "magit")
+		    "gb" 'magit-blame
+		    "gc" 'magit-clone
+		    "gs" 'magit-status
 
-   "l" 'mac-launchpad
+		    "h" '(:ignore t :which-key "help")
+		    "hdf" 'counsel-describe-function
+		    "hdv" 'counsel-describe-variable
 
-   "o" '(:ignore t :which-key "org")
-   "oa" 'org-agenda
-   "oo" (lambda () (interactive) (find-file "~/org/index.org"))
-   "oO" 'org-clock-out
-   "ol" 'org-store-link
+		    "j=" 'spacemacs/indent-region-or-buffer
 
-   "p" '(:ignore t :which-key "projectile")
-   "pa" 'projectile-ag
-   "pb" 'counsel-projectile-switch-to-buffer
-   "pd" 'counsel-projectile-find-dir
-   "pf" 'counsel-projectile-find-file
-   "pp" 'counsel-projectile-switch-project
+		    "kb" 'kill-this-buffer
+		    "kw" 'kill-buffer-and-window
 
-   "t" '(:ignore t :which-key "misc")
-   "tl" 'linum-mode
-   "tw" 'whitespace-mode
-   "t TAB" 'nmuth/toggle-indent-tabs-mode
-   "tt" '(:ignore t :which-key "themes")
-   "ttl" 'nmuth/light-theme
-   "ttd" 'nmuth/dark-theme
+		    "l" 'mac-launchpad
 
-   "q" '(:ignore t :which-key "quit")
-   "qr" 'restart-emacs
+		    "p" '(:ignore t :which-key "projectile")
+		    "pa" 'projectile-ag
+		    "pb" 'counsel-projectile-switch-to-buffer
+		    "pd" 'counsel-projectile-find-dir
+		    "pf" 'counsel-projectile-find-file
+		    "pp" 'counsel-projectile-switch-project
 
-   "w" '(:ignore t :which-key "windows")
-   "wj" 'evil-window-down
-   "wk" 'evil-window-up
-   "wl" 'evil-window-right
-   "wh" 'evil-window-left
-   "wv" 'split-window-right
-   "wV" 'spacemacs/split-window-right-and-focus
-   "wc" 'close-window
-   "wm" 'spacemacs/toggle-maximize-buffer
-   ))
+		    "t" '(:ignore t :which-key "misc")
+		    "tl" 'linum-mode
+		    "tw" 'whitespace-mode
+		    "t TAB" 'nmuth/toggle-indent-tabs-mode
+		    "tt" '(:ignore t :which-key "themes")
+		    "ttl" 'nmuth/light-theme
+		    "ttd" 'nmuth/dark-theme
+
+		    "q" '(:ignore t :which-key "quit")
+		    "qr" 'restart-emacs
+
+		    "w" '(:ignore t :which-key "windows")
+		    "wj" 'evil-window-down
+		    "wk" 'evil-window-up
+		    "wl" 'evil-window-right
+		    "wh" 'evil-window-left
+		    "wv" 'split-window-right
+		    "wV" 'spacemacs/split-window-right-and-focus
+		    "w-" 'spacemacs/split-window-below-and-focus
+		    "w|" 'spacemacs/split-window-right-and-focus
+		    "wc" 'close-window
+		    "wm" 'spacemacs/toggle-maximize-buffer)
 
 (general-define-key :states '(visual insert)
 		    "ESC" 'evil-escape)
+
+(general-define-key :states '(visual normal insert emacs)
+                    "≈" 'counsel-M-x)
+
+(global-set-key (kbd "<A-backspace>") 'evil-delete-backward-word)
+
+(global-set-key (kbd "C-ç") 'calc)
+(global-set-key (kbd "C-c C-k C-w") 'kill-buffer-and-window)
+
+;; why does this error?
+;;(general-define-key :states '(normal visual insert emacs)
+;;"M-x" 'counsel-M-x)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/dlang.el")
-(load-file "~/.emacs.d/elixir.el")
 (load-file "~/.emacs.d/elm.el")
 (load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
@@ -223,7 +274,13 @@
 (load-file "~/.emacs.d/mac-launchpad.el")
 (load-file "~/.emacs.d/org.el")
 (load-file "~/.emacs.d/python.el")
+(load-file "~/.emacs.d/rust.el")
+(load-file "~/.emacs.d/csharp.el")
 (load-file "~/.emacs.d/project-shell-commands.el")
+(load-file "~/.emacs.d/pony.el")
+
+(use-package clojure-mode :ensure t)
+(use-package cider :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; final startup tasks
@@ -237,6 +294,8 @@
 (tool-bar-mode 0)
 (global-company-mode)
 (global-flycheck-mode)
+(when (fboundp 'menu-bar-mode)
+  (menu-bar-mode 0))
 (when (fboundp 'tabbar-mode)
   (tabbar-mode 0))
 (when (fboundp 'scroll-bar-mode)
@@ -249,6 +308,8 @@
 ;; open an org file if we're starting emacs now
 (unless (boundp 'nmuth/first-startup-finished)
   (nmuth/first-load-setup))
+
+(nmuth/dark-theme)
 
 (custom-set-faces
  '(magit-diff-added ((((type tty)) (:foreground "green"))))
