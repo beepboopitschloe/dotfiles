@@ -9,6 +9,7 @@
 (use-package elixir-mode :ensure t)
 (use-package alchemist :ensure t
   :config
+  (add-hook 'elixir-mode-hook (lambda () (alchemist-mode)))
   (add-hook 'alchemist-mode-hook #'nmuth/alchemist-hook)
   (add-hook 'alchemist-iex-mode-hook #'nmuth/iex-hook))
 

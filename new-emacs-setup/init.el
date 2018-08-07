@@ -109,6 +109,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that don't require configuration
 
+(use-package persistent-scratch :ensure t)
 (use-package evil :ensure t)
 (use-package evil-escape :ensure t)
 (use-package magit :ensure t)
@@ -284,6 +285,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; final startup tasks
+
+(persistent-scratch-setup-default)
 
 ;; turn on some minor modes
 (evil-mode)

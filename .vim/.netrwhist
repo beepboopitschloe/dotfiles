@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/Users/nmuth/Projects/noahmuth.com/site/themes/slender'
+let g:netrw_dirhist_2='/Users/nmuth/Projects/lisp/lisp-bootstrap'
+let g:netrw_dirhist_3='/Users/nmuth/Downloads/discount-ascii-warehouse/static'
+let g:netrw_dirhist_4='/Users/nmuth/Projects/elixir/backpackrat/deps'
+let g:netrw_dirhist_5='/Users/nmuth/Projects/elixir/org_storage/web'
+let g:netrw_dirhist_6='/Users/nmuth/Desktop/Sample Tunnelblick VPN Configuration'
+let g:netrw_dirhist_7='/Users/nmuth/Projects/elixir'
+let g:netrw_dirhist_8='/Users/nmuth/Projects/elixir/org_storage/test'
+let g:netrw_dirhist_9='/Users/nmuth/Projects/2cahoot/flow'

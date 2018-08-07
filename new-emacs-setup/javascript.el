@@ -42,6 +42,7 @@
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.[s]?css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
 
 (defun nmuth/less-css-mode-hook ()
