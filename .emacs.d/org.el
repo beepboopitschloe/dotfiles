@@ -22,36 +22,91 @@ LEVEL: number of spaces to offset the string."
       ""
     (let ((str " "))
       (while (> level 1)
-	(setq level (1- level))
-	(setq str (concat str "-")))
+        (setq level (1- level))
+        (setq str (concat str "-")))
       (concat str "> "))))
+
+(defvar nmuth/target-jira-host "https://jira.target.com")
+(defcustom nmuth/default-jira-host nmuth/target-jira-host
+  "The default JIRA host to use when inserting links."
+  :group 'nmuth
+  :type 'variable)
+
+(defun nmuth/is-url-p (str)
+  (or (string-prefix-p "http://" str) (string-prefix-p "https://" str)))
+
+(defun nmuth/ticket-number-from-jira-url (url)
+  (let* ((parts (split-string url "/"))
+         (last-part (car (last parts))))
+    last-part))
+
+(defun nmuth/org-link (url label)
+  (format "[[%s][%s]]" url (or label url)))
+
+(defun nmuth/jira-org-link-from-string (ticket-or-url)
+  (let* ((is-url (nmuth/is-url-p ticket-or-url))
+         (ticket-number (if is-url (nmuth/ticket-number-from-jira-url ticket-or-url) ticket-or-url))
+         (url (if is-url ticket-or-url (format "%s/browse/%s" nmuth/default-jira-host ticket-number))))
+    (nmuth/org-link url ticket-number)))
+
+(defun nmuth/add-jira-link-to-properties (ticket-or-url)
+  (interactive "sIssue number or URL: ")
+  (org-set-property "JIRA_TICKET" (nmuth/jira-org-link-from-string ticket-or-url)))
+
+(defun nmuth/insert-jira-link (ticket-or-url)
+  (interactive "sIssue number or URL: ")
+  (let* ((org-link (nmuth/jira-org-link-from-string ticket-or-url)))
+    (insert org-link)))
+
+(defun nmuth/pp-github-issue-or-pr (raw-url)
+  (let* ((url (url-generic-parse-url raw-url))
+         (parts (split-string (url-filename url) "/"))
+         (org (nth 1 parts))
+         (repo (nth 2 parts))
+         (entity-type (nth 3 parts))
+         (entity-id (nth 4 parts)))
+    (format "%s/%s#%s" org repo entity-id)))
+
+(defun nmuth/github-issue-or-pr-to-org-link (raw-url)
+  (nmuth/org-link raw-url (nmuth/pp-github-issue-or-pr raw-url)))
+
+(defun nmuth/insert-github-issue-or-pr-link (raw-url)
+  (interactive "sURL for issue or pull request: ")
+  (insert (nmuth/github-issue-or-pr-to-org-link raw-url)))
+
+(defun nmuth/add-pull-request-to-properties (raw-url)
+  (interactive "sPull request URL: ")
+  (let* ((link (nmuth/github-issue-or-pr-to-org-link raw-url))
+         (current-value (org-entry-get (point) "PULL_REQUESTS"))
+         (next-value (if current-value (format "%s %s" current-value link) link)))
+    (org-entry-put (point) "PULL_REQUESTS" next-value)))
 
 (defvar nmuth/mermaid-cmd "~/.config/yarn/global/node_modules/.bin/mmdc")
 
 (defun nmuth/org-mermaid ()
   (interactive)
   (let* ((infile (make-temp-file "org-mermaid"))
-	 (outfile (make-temp-file "org-mermaid" nil ".png"))
-	 (el (org-element-at-point))
-	 (lang (org-element-property :language el))
-	 (content (org-element-property :value el))
-	 (cmd (format "%s -i %s -o %s" nmuth/mermaid-cmd infile outfile)))
+         (outfile (make-temp-file "org-mermaid" nil ".png"))
+         (el (org-element-at-point))
+         (lang (org-element-property :language el))
+         (content (org-element-property :value el))
+         (cmd (format "%s -i %s -o %s" nmuth/mermaid-cmd infile outfile)))
     (if (string-equal lang "mermaid")
-	(with-temp-buffer
-	  (message cmd)
-	  (insert content)
-	  (write-file infile)
-	  (shell-command cmd)
-	  (shell-command (format "open %s" outfile)))))
+        (with-temp-buffer
+          (message cmd)
+          (insert content)
+          (write-file infile)
+          (shell-command cmd)
+          (shell-command (format "open %s" outfile)))))
   (message "nmuth/org-mermaid can only be called on :mermaid source blocks"))
 
 (defun nmuth/org-mermaid-share ()
   (interactive)
   (let* ((el (org-element-at-point))
-	 (lang (org-element-property :language el))
-	 (content (org-element-property :value el))
-	 (encoded (base64-encode-string content t))
-	 (link (format "https://mermaidjs.github.io/mermaid-live-editor/#/view/%s" encoded)))
+         (lang (org-element-property :language el))
+         (content (org-element-property :value el))
+         (encoded (base64-encode-string content t))
+         (link (format "https://mermaidjs.github.io/mermaid-live-editor/#/view/%s" encoded)))
     (org-open-link-from-string (format "[[%s]]" link))))
 
 (add-hook 'org-mode-hook 'nmuth/org-mode-hook)
@@ -60,65 +115,65 @@ LEVEL: number of spaces to offset the string."
 
 (setq org-todo-keywords
       '(;; action items
-	(sequence "TODO" "NEXT" "PROG" "REVW" "|" "DONE")
+        (sequence "TODO" "NEXT" "PROG" "REVW" "|" "DONE(!)")
 
-	(sequence "TASK" "|" "DONE")
+        (sequence "TASK" "|" "DONE")
 
-	;; blog posts
-	(sequence "IDEA" "RESEARCH" "WRITING" "EDITING" "READY" "|" "PUBLISHED")
+        ;; blog posts
+        (sequence "IDEA" "RESEARCH" "WRITING" "EDITING" "READY" "|" "PUBLISHED")
 
-	;; shopping lists
-	(sequence "MAYBE" "LISTED" "BUYNEXT" "|" "PURCHASED")
+        ;; shopping lists
+        (sequence "MAYBE" "LISTED" "BUYNEXT" "|" "PURCHASED")
 
-	;; books
-	(sequence "OWNED" "READNEXT" "READING" "|" "DONEREADING")
+        ;; books
+        (sequence "OWNED" "READNEXT" "READING" "|" "DONEREADING")
 
-	;; bug tracking
-	(sequence "REPORTED" "FIXING" "|" "FIXED")
+        ;; bug tracking
+        (sequence "REPORTED" "FIXING" "|" "FIXED")
 
-	;; misc
-	(sequence "WAITING" "|" "CANCELLED" "PHONE" "MEETING")))
+        ;; misc
+        (sequence "WAITING" "|" "CANCELLED" "PHONE" "MEETING")))
 
 (setq org-todo-keyword-faces
       '(;; action items
-	("TODO" :foreground "red" :weight bold)
-	("NEXT" :foreground "deep sky blue" :weight bold)
-	("PROG" :foreground "tomato2" :weight bold)
-	("REVW" :foreground "dark violet" :weight bold)
-	("DONE" :foreground "forest green" :weight bold)
+        ("TODO" :foreground "red" :weight bold)
+        ("NEXT" :foreground "deep sky blue" :weight bold)
+        ("PROG" :foreground "tomato2" :weight bold)
+        ("REVW" :foreground "dark violet" :weight bold)
+        ("DONE" :foreground "forest green" :weight bold)
 
-	;; action item assigned to someone else
-	("TASK" :foreground "deep sky blue" :weight bold)
+        ;; action item assigned to someone else
+        ("TASK" :foreground "deep sky blue" :weight bold)
 
-	;; shopping lists
-	("MAYBE" :foreground "red" :weight bold)
-	("LISTED" :foreground "deep sky blue" :weight bold)
-	("BUYNEXT" :foreground "dark violet" :weight bold)
-	("PURCHASED" :foreground "forest green" :weight bold)
+        ;; shopping lists
+        ("MAYBE" :foreground "red" :weight bold)
+        ("LISTED" :foreground "deep sky blue" :weight bold)
+        ("BUYNEXT" :foreground "dark violet" :weight bold)
+        ("PURCHASED" :foreground "forest green" :weight bold)
 
-	;; books
-	("OWNED" :foreground "red" :weight bold)
-	("READNEXT" :foreground "deep sky blue" :weight bold)
-	("READING" :foreground "tomato2" :weight bold)
-	("DONEREADING" :foreground "forest green" :weight bold)
+        ;; books
+        ("OWNED" :foreground "red" :weight bold)
+        ("READNEXT" :foreground "deep sky blue" :weight bold)
+        ("READING" :foreground "tomato2" :weight bold)
+        ("DONEREADING" :foreground "forest green" :weight bold)
 
-	;; blog posts
-	("IDEA" :foreground "royal blue" :weight bold)
-	("RESEARCH" :foreground "deep sky blue" :weight bold)
-	("WRITING" :foreground "tomato2" :weight bold)
-	("EDITING" :foreground "dark violet" :weight bold)
-	("READY" :foreground "green yellow" :weight bold)
-	("PUBLISHED" :foreground "forest green" :weight bold)
+        ;; blog posts
+        ("IDEA" :foreground "royal blue" :weight bold)
+        ("RESEARCH" :foreground "deep sky blue" :weight bold)
+        ("WRITING" :foreground "tomato2" :weight bold)
+        ("EDITING" :foreground "dark violet" :weight bold)
+        ("READY" :foreground "green yellow" :weight bold)
+        ("PUBLISHED" :foreground "forest green" :weight bold)
 
-	;; bug tracking
-	("REPORTED" :foreground "red" :weight bold)
-	("FIXING" :foreground "deep sky blue" :weight bold)
-	("FIXED" :foreground "forest green" :weight bold)
+        ;; bug tracking
+        ("REPORTED" :foreground "red" :weight bold)
+        ("FIXING" :foreground "deep sky blue" :weight bold)
+        ("FIXED" :foreground "forest green" :weight bold)
 
-	;; misc
-	("WAITING" :foreground "red" :weight bold)
-	("CANCELLED" :foreground "forest green" :weight bold)
-	("MEETING" :foreground "forest green" :weight bold)))
+        ;; misc
+        ("WAITING" :foreground "red" :weight bold)
+        ("CANCELLED" :foreground "forest green" :weight bold)
+        ("MEETING" :foreground "forest green" :weight bold)))
 
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (setq org-agenda-files (list org-directory))
@@ -126,9 +181,9 @@ LEVEL: number of spaces to offset the string."
 
 (setq org-capture-templates
       '(("t" "Task" entry (file+headline "~/org/planner.org" "tasks")
-	 "* TODO %?\n%i\n%a")
-	("j" "Journal" entry (file+datetree "~/org/journal.org")
-	 "* %?")))
+         "* TODO %?\n%i\n%a")
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?")))
 
 (defun nmuth/capture-journal ()
   (interactive)
@@ -138,55 +193,61 @@ LEVEL: number of spaces to offset the string."
 
 ;; global org keybindings
 (general-define-key :states '(normal visual insert emacs)
-		    :prefix "SPC"
-		    :non-normal-prefix "C-c"
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
 
-		    "o" '(:ignore t :which-key "org")
-		    "o a" 'org-agenda
-		    "o c" 'org-capture
-		    "o j" 'nmuth/capture-journal
-		    "o O" 'org-clock-out
-		    "o l" 'org-store-link)
+                    "o" '(:ignore t :which-key "org")
+                    "o a" 'org-agenda
+                    "o c" 'org-capture
+                    "o j" 'nmuth/capture-journal
+                    "o O" 'org-clock-out
+                    "o l" 'org-store-link
+                    "o J" 'nmuth/insert-jira-link
+                    "o G" 'nmuth/insert-github-issue-or-pr-link)
 
 ;; org-mode specific keybindings
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'org-mode-map
-		    :prefix "SPC"
-		    :non-normal-prefix "C-c"
-		    "m ." 'org-time-stamp
-		    "m a" 'org-agenda
-		    "m C" 'org-clock-update-time-maybe
-		    "m d" 'org-deadline
-		    "m D" 'org-update-all-dblocks
+                    :keymaps 'org-mode-map
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
+                    "m ." 'org-time-stamp
+                    "m a" 'org-agenda
+                    "m C" 'org-clock-update-time-maybe
+                    "m d" 'org-deadline
+                    "m D" 'org-update-all-dblocks
 
-		    "m P" 'nmuth/org-push
-		    "m F" 'nmuth/org-fetch
+                    "m P" 'nmuth/org-push
+                    "m F" 'nmuth/org-fetch
 
-		    "m I" 'org-clock-in
-		    "m m m" 'nmuth/org-mermaid
-		    "m m s" 'nmuth/org-mermaid-share
-		    "m o" 'org-open-at-point
-		    "m O" 'org-clock-out
-		    "m q" 'org-fill-paragraph
-		    "m s" 'org-schedule
-		    "m t" 'org-todo
+                    "m I" 'org-clock-in
+                    "m m m" 'nmuth/org-mermaid
+                    "m m s" 'nmuth/org-mermaid-share
+                    "m o" 'org-open-at-point
+                    "m O" 'org-clock-out
+                    "m q" 'org-fill-paragraph
 
-		    "m S" '(:ignore t :which-key "subtree")
-		    "m Sh" 'org-promote-subtree
-		    "m Sl" 'org-demote-subtree)
+                    "m p" '(:ignore t :which-key "heading properties")
+                    "m p j" 'nmuth/add-jira-link-to-properties
+                    "m p g" 'nmuth/add-pull-request-to-properties
+
+                    "m s" 'org-schedule
+                    "m t" 'org-todo
+
+                    "m S" '(:ignore t :which-key "subtree")
+                    "m Sh" 'org-promote-subtree
+                    "m Sl" 'org-demote-subtree)
 
 (general-define-key :states '(normal)
-		    :keymaps 'org-mode-map
-		    "t" 'org-todo
-		    "C-i" 'evil-toggle-fold)
+                    :keymaps 'org-mode-map
+                    "t" 'org-todo
+                    "C-i" 'evil-toggle-fold)
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'org-mode-map
+                    :keymaps 'org-mode-map
 
-		    "C-c l" 'org-store-link)
+                    "C-c l" 'org-store-link)
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'org-agenda-mode-map
-		    "j" 'evil-next-line
-		    "k" 'evil-previous-line)
-
+                    :keymaps 'org-agenda-mode-map
+                    "j" 'evil-next-line
+                    "k" 'evil-previous-line)
