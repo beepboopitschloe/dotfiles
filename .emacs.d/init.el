@@ -112,6 +112,10 @@
 (use-package persistent-scratch :ensure t)
 (use-package evil :ensure t)
 (use-package evil-escape :ensure t)
+(use-package evil-collection :ensure t
+             :config
+             (setq evil-want-keybinding nil)
+             (evil-collection-init))
 (use-package magit :ensure t)
 (use-package evil-magit :ensure t)
 (use-package shell-pop :ensure t)
