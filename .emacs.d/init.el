@@ -176,20 +176,14 @@
 
 (use-package general :ensure t)
 
+;; override bindings (available everywhere)
 (general-define-key :states '(normal visual insert emacs)
-		    :prefix "SPC"
-		    :non-normal-prefix "C-c"
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
+                    :keymaps 'override
 
 		    "TAB" 'spacemacs/alternate-buffer
 		    ":" 'counsel-M-x
-
-		    "X" 'nmuth/pbcut
-		    "C" 'nmuth/pbcopy
-		    "V" 'nmuth/pbpaste
-
-		    "a" '(:ignore t :which-key "applications")
-		    "as" '(:ignore t :which-key "shells")
-		    "ast" 'shell-pop
 
 		    "b" '(:ignore t :which-key "buffer")
 		    "bb" 'ivy-switch-buffer
@@ -199,28 +193,16 @@
 		    "bp" 'previous-buffer
 		    "br" 'rename-buffer
 
-		    "e" '(:ignore t :which-key "emoji")
-		    "ei" 'emojify-insert-emoji
-
 		    "f" '(:ignore t :which-key "file")
 		    "ff" '(counsel-find-file :which-key "find file")
 		    "fr" 'counsel-recentf
-
-		    "g" '(:ignore t :which-key "magit")
-		    "gb" 'magit-blame
-		    "gc" 'magit-clone
-		    "gs" 'magit-status
 
 		    "h" '(:ignore t :which-key "help")
 		    "hdf" 'counsel-describe-function
 		    "hdv" 'counsel-describe-variable
 
-		    "j=" 'spacemacs/indent-region-or-buffer
-
 		    "kb" 'kill-this-buffer
 		    "kw" 'kill-buffer-and-window
-
-		    "l" 'mac-launchpad
 
 		    "p" '(:ignore t :which-key "projectile")
 		    "pa" 'projectile-ag
@@ -228,14 +210,6 @@
 		    "pd" 'counsel-projectile-find-dir
 		    "pf" 'counsel-projectile-find-file
 		    "pp" 'counsel-projectile-switch-project
-
-		    "t" '(:ignore t :which-key "misc")
-		    "tl" 'linum-mode
-		    "tw" 'whitespace-mode
-		    "t TAB" 'nmuth/toggle-indent-tabs-mode
-		    "tt" '(:ignore t :which-key "themes")
-		    "ttl" 'nmuth/light-theme
-		    "ttd" 'nmuth/dark-theme
 
 		    "q" '(:ignore t :which-key "quit")
 		    "qr" 'restart-emacs
@@ -251,6 +225,39 @@
 		    "w|" 'spacemacs/split-window-right-and-focus
 		    "wc" 'close-window
 		    "wm" 'spacemacs/toggle-maximize-buffer)
+ 
+;; defaults that _will_ be overridden by local keymaps
+(general-define-key :states '(normal visual insert emacs)
+		    :prefix "SPC"
+		    :non-normal-prefix "C-c"
+
+		    "X" 'nmuth/pbcut
+		    "C" 'nmuth/pbcopy
+		    "V" 'nmuth/pbpaste
+
+		    "a" '(:ignore t :which-key "applications")
+		    "as" '(:ignore t :which-key "shells")
+		    "ast" 'shell-pop
+
+		    "e" '(:ignore t :which-key "emoji")
+		    "ei" 'emojify-insert-emoji
+
+		    "g" '(:ignore t :which-key "magit")
+		    "gb" 'magit-blame
+		    "gc" 'magit-clone
+		    "gs" 'magit-status
+
+		    "j=" 'spacemacs/indent-region-or-buffer
+
+		    "l" 'mac-launchpad
+
+		    "t" '(:ignore t :which-key "misc")
+		    "tl" 'linum-mode
+		    "tw" 'whitespace-mode
+		    "t TAB" 'nmuth/toggle-indent-tabs-mode
+		    "tt" '(:ignore t :which-key "themes")
+		    "ttl" 'nmuth/light-theme
+		    "ttd" 'nmuth/dark-theme)
 
 (general-define-key :states '(visual insert)
 		    "ESC" 'evil-escape)
