@@ -70,7 +70,8 @@
   "Enable dark GUI theme."
   (interactive)
   (progn
-    (load-theme 'nord)
+    (load-theme 'srcery t)
+    ;; (set-face-foreground 'font-lock-comment-face "cyan")
     ;; (color-theme-initialize)
     ;; (color-theme-charcoal-black)
     )) ; (color-theme-jonadabian-slate))
@@ -132,6 +133,7 @@
 (use-package erc :ensure t)
 (use-package color-theme :ensure t)
 (use-package nord-theme :ensure t)
+(use-package srcery-theme :ensure t)
 (use-package markdown-mode :ensure t)
 (use-package haskell-mode :ensure t)
 
@@ -274,6 +276,9 @@
 ;;(general-define-key :states '(normal visual insert emacs)
 ;;"M-x" 'counsel-M-x)
 
+;;  web-mode creates its own faces for some stupid reason, so we have to enable the theme before it loads
+(nmuth/dark-theme)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
 
@@ -323,9 +328,11 @@
 (unless (boundp 'nmuth/first-startup-finished)
   (nmuth/first-load-setup))
 
-(nmuth/dark-theme)
-
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(magit-diff-added ((((type tty)) (:foreground "green"))))
  '(magit-diff-added-highlight ((((type tty)) (:foreground "LimeGreen"))))
  '(magit-diff-context-highlight ((((type tty)) (:foreground "default"))))

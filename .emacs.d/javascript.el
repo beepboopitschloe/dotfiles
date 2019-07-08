@@ -19,6 +19,8 @@
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
+  ;; web mode sets its own comment face and it's fucking unreadable
+  (set-face-foreground 'web-mode-javascript-comment-face "cyan")
   (setq indent-tabs-mode nil))
 
 (defun nmuth/typescript-setup ()

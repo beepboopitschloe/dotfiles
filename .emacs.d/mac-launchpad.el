@@ -21,9 +21,9 @@
 
 ;;; Commentary:
 
-;; This package provides an interface for opening OS X apps from inside emacs,
+;; This package provides an interface for opening macOS apps from inside Emacs,
 ;; with autocompletion. The intention is to provide similar functionality to the
-;; native "launchpad" application.
+;; native Launchpad application.
 ;;
 ;; TODO:
 ;; - mac-launchpad doesn't find .apps inside folders, such as Adobe Photoshop
@@ -40,6 +40,7 @@
         (t nil)))
 
 (defun mac-launchpad/find-mac-apps (folder)
+  "List all .app directories present in FOLDER."
   (let* ((files (directory-files folder))
          (without-dots (delete-if (lambda (f) (or (string= "." f) (string= ".." f))) files))
          (all-files (mapcar (lambda (f) (file-name-as-directory (concat (file-name-as-directory folder) f))) without-dots))
@@ -47,10 +48,11 @@
     result))
 
 (defun mac-launchpad ()
+  "Find and open macOS applications with similar functionality to Launchpad.app."
   (interactive)
   (let* ((apps (mac-launchpad/find-mac-apps "/Applications"))
          (to-launch (completing-read "launch: " apps)))
-    (shell-command (format "open %s" to-launch))))
+    (shell-command (format "open '%s'" to-launch))))
 
 (global-set-key (kbd "C-c C-l") 'mac-launchpad)
 
