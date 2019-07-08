@@ -126,6 +126,24 @@ function mermaid() {
     open $file
 }
 
+# do a thing if the last command was successful
+function and() {
+    if [ $? -eq 0 ]; then
+	$@
+    else
+	return 1
+    fi
+}
+
+# print whether the previous command was successful
+function ok?() {
+    if [ $? -eq 0 ]; then
+	echo '🆒👀🆗'
+    else
+	echo '🚫🙅🚫'
+    fi
+}
+
 alias vihosts='sudo vim /etc/hosts'
 
 # friendly message
