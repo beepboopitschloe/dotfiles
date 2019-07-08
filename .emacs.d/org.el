@@ -51,7 +51,11 @@ LEVEL: number of spaces to offset the string."
 
 (defun nmuth/add-jira-link-to-properties (ticket-or-url)
   (interactive "sIssue number or URL: ")
-  (org-set-property "JIRA_TICKET" (nmuth/jira-org-link-from-string ticket-or-url)))
+  (let* ((key "JIRA_TICKET")
+	 (link (nmuth/jira-org-link-from-string ticket-or-url))
+	 (current-value (org-entry-get nil key))
+	 (next-value (if current-value (format "%s %s" current-value link) link)))
+    (org-set-property key next-value)))
 
 (defun nmuth/insert-jira-link (ticket-or-url)
   (interactive "sIssue number or URL: ")
@@ -80,6 +84,49 @@ LEVEL: number of spaces to offset the string."
          (current-value (org-entry-get (point) "PULL_REQUESTS"))
          (next-value (if current-value (format "%s %s" current-value link) link)))
     (org-entry-put (point) "PULL_REQUESTS" next-value)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; functions for copying github link to the current line
+
+(defun nmuth/git-origin ()
+  (string-trim (shell-command-to-string "git remote -v | head -n 1 | awk '{ print $2 }'")))
+
+(defun nmuth/git-current-branch ()
+  (string-trim (shell-command-to-string "git rev-parse --abbrev-ref HEAD")))
+
+(defun nmuth/git-ssh-origin-to-url (ssh)
+  (let* ((without-colon (replace-regexp-in-string ":" "/" ssh))
+         (without-suffix (replace-regexp-in-string "\.git$" "" without-colon))
+         (without-username (replace-regexp-in-string "^git@" "https://" without-suffix)))
+    without-username))
+
+(defun nmuth/github-origin-link (origin)
+  (if (string-prefix-p "http" origin)
+      origin
+    (nmuth/git-ssh-origin-to-url origin)))
+
+(defun nmuth/path-to-buffer-file-in-project ()
+  (replace-regexp-in-string (projectile-project-root) "" buffer-file-name))
+
+(defun nmuth/get-github-link-to-point ()
+  (let* ((origin (nmuth/git-origin))
+         (branch (nmuth/git-current-branch))
+         (base-url (nmuth/github-origin-link origin))
+         (branch-url (format "%s/blob/%s" base-url branch))
+         (filepath (nmuth/path-to-buffer-file-in-project))
+         (line-number (line-number-at-pos)))
+    (format "%s/%s\#L%d" branch-url filepath line-number)))
+
+(defun nmuth/copy-github-link-to-point ()
+  (interactive)
+  (let* ((url (nmuth/get-github-link-to-point))
+         (filepath (nmuth/path-to-buffer-file-in-project))
+         (line-number (line-number-at-pos))
+	 (desc (format "%s#L%s" filepath line-number))
+	 (org-link (format "[[%s][%s]]" url desc)))
+    (kill-new org-link)))
+
+;; mermaid
 
 (defvar nmuth/mermaid-cmd "~/.config/yarn/global/node_modules/.bin/mmdc")
 
@@ -202,6 +249,7 @@ LEVEL: number of spaces to offset the string."
                     "o j" 'nmuth/capture-journal
                     "o O" 'org-clock-out
                     "o l" 'org-store-link
+                    "o L" 'nmuth/copy-github-link-to-point
                     "o J" 'nmuth/insert-jira-link
                     "o G" 'nmuth/insert-github-issue-or-pr-link)
 

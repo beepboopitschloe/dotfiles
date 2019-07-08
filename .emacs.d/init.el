@@ -199,6 +199,11 @@
 		    "ff" '(counsel-find-file :which-key "find file")
 		    "fr" 'counsel-recentf
 
+		    "g" '(:ignore t :which-key "magit")
+		    "gb" 'magit-blame
+		    "gc" 'magit-clone
+		    "gs" 'magit-status
+
 		    "h" '(:ignore t :which-key "help")
 		    "hdf" 'counsel-describe-function
 		    "hdv" 'counsel-describe-variable
@@ -228,7 +233,7 @@
 		    "wc" 'close-window
 		    "wm" 'spacemacs/toggle-maximize-buffer)
  
-;; defaults that _will_ be overridden by local keymaps
+;; defaults that _will_ be overridden by local keymaps (most annoyingly, dired)
 (general-define-key :states '(normal visual insert emacs)
 		    :prefix "SPC"
 		    :non-normal-prefix "C-c"
@@ -243,11 +248,6 @@
 
 		    "e" '(:ignore t :which-key "emoji")
 		    "ei" 'emojify-insert-emoji
-
-		    "g" '(:ignore t :which-key "magit")
-		    "gb" 'magit-blame
-		    "gc" 'magit-clone
-		    "gs" 'magit-status
 
 		    "j=" 'spacemacs/indent-region-or-buffer
 
