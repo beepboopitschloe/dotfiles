@@ -136,7 +136,7 @@ function and() {
 }
 
 # print whether the previous command was successful
-function ok?() {
+function ok? {
     if [ $? -eq 0 ]; then
 	echo '🆒👀🆗'
     else
