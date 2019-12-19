@@ -120,6 +120,13 @@ LEVEL: number of spaces to offset the string."
 (defun nmuth/copy-github-link-to-point ()
   (interactive)
   (let* ((url (nmuth/get-github-link-to-point))
+         (cmd (format "echo %s | reattach-to-user-namespace pbcopy" url)))
+    (message cmd)
+    (shell-command cmd)))
+
+(defun nmuth/yank-github-org-link-to-point ()
+  (interactive)
+  (let* ((url (nmuth/get-github-link-to-point))
          (filepath (nmuth/path-to-buffer-file-in-project))
          (line-number (line-number-at-pos))
 	 (desc (format "%s#L%s" filepath line-number))
@@ -249,7 +256,8 @@ LEVEL: number of spaces to offset the string."
                     "o j" 'nmuth/capture-journal
                     "o O" 'org-clock-out
                     "o l" 'org-store-link
-                    "o L" 'nmuth/copy-github-link-to-point
+		    "o L C" 'nmuth/copy-github-link-to-point
+                    "o L L" 'nmuth/yank-github-org-link-to-point
                     "o J" 'nmuth/insert-jira-link
                     "o G" 'nmuth/insert-github-issue-or-pr-link)
 

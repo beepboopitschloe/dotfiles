@@ -187,6 +187,9 @@
 		    "TAB" 'spacemacs/alternate-buffer
 		    ":" 'counsel-M-x
 
+		    "a" '(:ignore t :which-key "ag")
+		    "aa" 'ag
+
 		    "b" '(:ignore t :which-key "buffer")
 		    "bb" 'ivy-switch-buffer
 		    "bd" 'kill-this-buffer
