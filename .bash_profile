@@ -147,11 +147,13 @@ function ok? {
 alias vihosts='sudo vim /etc/hosts'
 
 # friendly message
-echo "Shiny. Let's be bad guys."
+echo "MAIN SCREEN TURN ON"
 
 if [ $term_is_iterm2 ]; then
     source $HOME/.iterm2_shell_integration.bash
 fi
+
+PATH="/usr/local/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 . "$(brew --prefix nvm)/nvm.sh"

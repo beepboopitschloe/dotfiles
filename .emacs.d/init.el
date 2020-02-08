@@ -43,7 +43,7 @@
 
 (defun nmuth/pbcopy ()
   (interactive)
-  (shell-command-on-region (region-beginning) (region-end) "reattach-to-user-namespace pbcopy"))
+  (shell-command-on-region (region-beginning) (region-end) "pbcopy"))
 
 (defun nmuth/pbcut ()
   (interactive)
@@ -52,7 +52,7 @@
 
 (defun nmuth/pbpaste ()
   (interactive)
-  (let ((paste (shell-command-to-string "reattach-to-user-namespace pbpaste")))
+  (let ((paste (shell-command-to-string "pbpaste")))
     (when mark-active (evil-delete (point) (mark)))
     (insert paste)))
 
@@ -286,6 +286,7 @@
 ;; specific mode configuration
 
 (load-file "~/.emacs.d/dlang.el")
+(load-file "~/.emacs.d/elixir.el")
 (load-file "~/.emacs.d/elm.el")
 (load-file "~/.emacs.d/go.el")
 (load-file "~/.emacs.d/javascript.el")
