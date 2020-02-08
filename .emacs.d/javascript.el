@@ -65,30 +65,31 @@
 (setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'web-mode-map
-		    :prefix "SPC"
-		    :non-normal-prefix "C-c"
+                    :keymaps 'web-mode-map
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
 
-		    "mn" '(:ignore t :which-key "npm")
-		    "mnd" 'npm-mode-npm-install-save-dev
-		    "mni" 'npm-mode-npm-install-save
-		    "mnl" 'npm-mode-npm-list
-		    "mnn" 'npm-mode-npm-inig
-		    "mnr" 'npm-mode-npm-run
-		    "mnu" 'npm-mode-npm-uninstall
-		    "mnv" 'npm-mode-visit-project-file
+                    "mn" '(:ignore t :which-key "npm")
+                    "mnd" 'npm-mode-npm-install-save-dev
+                    "mni" 'npm-mode-npm-install-save
+                    "mnl" 'npm-mode-npm-list
+                    "mnn" 'npm-mode-npm-inig
+                    "mnr" 'npm-mode-npm-run
+                    "mnu" 'npm-mode-npm-uninstall
+                    "mnv" 'npm-mode-visit-project-file
 
-		    "md" 'tide-jump-to-definition
-		    "mi" 'tide-jump-to-implementation
-		    "mr" 'tide-references
-		    "mR" 'tide-rename-symbol)
+                    "md" 'tide-jump-to-definition
+                    "mi" 'tide-jump-to-implementation
+                    "mr" 'tide-references
+                    "mR" 'tide-rename-symbol
+
+                    "mS" 'tide-restart-server)
 
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'tide-references-mode-map
+                    :keymaps 'tide-references-mode-map
 
-		    "RET" 'tide-goto-reference
-		    "n" 'tide-find-next-reference
-		    "p" 'tide-find-previous-reference
-		    "q" 'quit-window)
-
+                    "RET" 'tide-goto-reference
+                    "n" 'tide-find-next-reference
+                    "p" 'tide-find-previous-reference
+                    "q" 'quit-window)
