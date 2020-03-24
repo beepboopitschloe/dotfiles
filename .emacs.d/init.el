@@ -161,6 +161,12 @@
   (setq emojify-display-style 'unicode)
   (global-emojify-mode))
 
+(use-package lsp-mode :ensure t
+  :commands lsp)
+
+(use-package lsp-ui :ensure t)
+(use-package company-lsp :ensure t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages in the vendor directory
 

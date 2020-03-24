@@ -3,7 +3,7 @@
 (defun nmuth/web-mode-javascript-setup ()
   (interactive)
   (web-mode-set-content-type "jsx")
-  (tide-setup)
+  (lsp)
   (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (setq web-mode-code-indent-offset 2)
@@ -26,11 +26,16 @@
 
 (defun nmuth/typescript-setup ()
   (interactive)
-  (tide-setup)
+  ;(tide-setup)
   (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  (lsp))
+
+(defun nmuth/eslint-fix ()
+  (interactive)
+  (shell-command (concat "yarn eslint --fix " (buffer-file-name))))
 
 (use-package tide :ensure t
   :config
@@ -69,6 +74,8 @@
                     :prefix "SPC"
                     :non-normal-prefix "C-c"
 
+                    "mf" 'nmuth/eslint-fix
+
                     "mn" '(:ignore t :which-key "npm")
                     "mnd" 'npm-mode-npm-install-save-dev
                     "mni" 'npm-mode-npm-install-save
@@ -78,12 +85,12 @@
                     "mnu" 'npm-mode-npm-uninstall
                     "mnv" 'npm-mode-visit-project-file
 
-                    "md" 'tide-jump-to-definition
-                    "mi" 'tide-jump-to-implementation
-                    "mr" 'tide-references
-                    "mR" 'tide-rename-symbol
+                    "md" 'lsp-find-definition
+                    "mi" 'lsp-find-implementation
+                    "mr" 'lsp-find-references
+                    "mR" 'lsp-rename
 
-                    "mS" 'tide-restart-server)
+                    "mS" 'lsp-restart-workspace)
 
 
 (general-define-key :states '(normal visual insert emacs)
