@@ -45,6 +45,9 @@ alias e="$EDITOR"
 # redo the last command as sudo
 alias fuck='sudo $(history -p !!)'
 
+# kubectl aliases
+alias kc=kubectl
+
 # function to count lines of code in a directory, excluding node_modules or
 # public/libs
 function m_sloc() {
@@ -97,6 +100,8 @@ function punblock() {
 # pretty-print json output
 alias json='python -m json.tool'
 
+alias alert='say -v victoria for the honor of greyskull'
+
 # curl shortcuts
 function curl-get() {
     curl -X GET -H "Content-Type: application/json" $@
@@ -141,13 +146,28 @@ function ok? {
 	echo '🆒👀🆗'
     else
 	echo '🚫🙅🚫'
+	false
     fi
 }
 
 alias vihosts='sudo vim /etc/hosts'
 
+# load ssh key into agent if it's not already there
+function ssh-add-assert-key() {
+    path=$1
+    pub=$(cat "${path}.pub")
+    loaded=$(ssh-add -L | grep "$pub")
+
+    if [[ -z "$loaded" ]]; then
+	ssh-add $path
+    fi
+}
 # friendly message
 echo "MAIN SCREEN TURN ON"
+
+if [[ -f ~/.ssh/id_rsa ]]; then
+    ssh-add-assert-key ~/.ssh/id_rsa
+fi
 
 if [ $term_is_iterm2 ]; then
     source $HOME/.iterm2_shell_integration.bash

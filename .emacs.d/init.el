@@ -136,6 +136,12 @@
 (use-package srcery-theme :ensure t)
 (use-package markdown-mode :ensure t)
 (use-package haskell-mode :ensure t)
+(use-package dart-mode :ensure t)
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+(use-package string-inflection :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration
@@ -160,7 +166,6 @@
   (setq emojify-emoji-styles '(unicode))
   (setq emojify-display-style 'unicode)
   (global-emojify-mode))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages in the vendor directory
 
@@ -224,6 +229,13 @@
 		    "q" '(:ignore t :which-key "quit")
 		    "qr" 'restart-emacs
 
+                    "s" '(:ignore t :which-key "strings")
+                    "ss" 'string-inflection-cycle
+                    "sc" 'string-inflection-lower-camelcase
+                    "sC" 'string-inflection-upcase
+                    "sv" 'string-inflection-camelcase
+                    "su" 'string-inflection-underscore
+
 		    "w" '(:ignore t :which-key "windows")
 		    "wj" 'evil-window-down
 		    "wk" 'evil-window-up
@@ -253,8 +265,6 @@
 		    "ei" 'emojify-insert-emoji
 
 		    "j=" 'spacemacs/indent-region-or-buffer
-
-		    "l" 'mac-launchpad
 
 		    "t" '(:ignore t :which-key "misc")
 		    "tl" 'linum-mode
@@ -287,8 +297,9 @@
 
 (load-file "~/.emacs.d/dlang.el")
 (load-file "~/.emacs.d/elixir.el")
-(load-file "~/.emacs.d/elm.el")
+;(load-file "~/.emacs.d/elm.el") i don't write elm anymore and it takes ages to run this
 (load-file "~/.emacs.d/go.el")
+(load-file "~/.emacs.d/godot.el")
 (load-file "~/.emacs.d/javascript.el")
 (load-file "~/.emacs.d/lisp.el")
 (load-file "~/.emacs.d/nim.el")
@@ -299,6 +310,7 @@
 (load-file "~/.emacs.d/csharp.el")
 (load-file "~/.emacs.d/project-shell-commands.el")
 (load-file "~/.emacs.d/pony.el")
+(load-file "~/.emacs.d/lsp.el")
 
 (use-package clojure-mode :ensure t)
 (use-package cider :ensure t)

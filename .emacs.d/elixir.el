@@ -28,8 +28,8 @@
 
 (defun nmuth/load-erlang ()
   (interactive)
-  (let* ((erl-path "/usr/local/Cellar/erlang/22.1.8//lib/erlang/")
-	 (erl-emacs-path (concat erl-path "lib/tools-3.2.1/emacs/"))
+  (let* ((erl-path "/usr/local/Cellar/erlang/24.1/lib/erlang/")
+	 (erl-emacs-path (concat erl-path "lib/tools-3.5.1/emacs/"))
 	 (erl-exec-path (concat erl-path "bin")))
     (setq load-path (cons erl-emacs-path load-path))
     (require 'erlang-start)
