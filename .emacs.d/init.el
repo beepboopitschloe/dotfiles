@@ -71,7 +71,7 @@
   (interactive)
   (progn
     (load-theme 'srcery t)
-    ;; (set-face-foreground 'font-lock-comment-face "cyan")
+    (set-face-foreground 'font-lock-comment-face "cyan")
     ;; (color-theme-initialize)
     ;; (color-theme-charcoal-black)
     )) ; (color-theme-jonadabian-slate))
@@ -166,6 +166,7 @@
   (setq emojify-emoji-styles '(unicode))
   (setq emojify-display-style 'unicode)
   (global-emojify-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages in the vendor directory
 
@@ -337,7 +338,7 @@
   (scroll-bar-mode 0))
 
 ;; add indent-tabs-mode = nil as a default hook for all files. add it to the end
-;; of the list so that we can easily override it for particular modes. (add-hook
+;; of the list so that we can easily override it for particular modes.
 (add-hook 'after-load-functions (lambda (f) (setq indent-tabs-mode nil)) t)
 
 ;; open an org file if we're starting emacs now

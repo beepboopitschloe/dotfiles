@@ -49,6 +49,10 @@
   (company-mode +1)
   (eslintd-fix-mode))
 
+(defun nmuth/eslint-fix ()
+  (interactive)
+  (shell-command (concat "yarn eslint --fix " (buffer-file-name))))
+
 (use-package tide :ensure t
   :config
   (add-hook 'typescript-mode-hook #'nmuth/typescript-setup))
@@ -84,18 +88,11 @@
 (setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'web-mode-map
-		    :prefix "SPC"
-		    :non-normal-prefix "C-c"
+                    :keymaps 'web-mode-map
+                    :prefix "SPC"
+                    :non-normal-prefix "C-c"
 
-		    "mn" '(:ignore t :which-key "npm")
-		    "mnd" 'npm-mode-npm-install-save-dev
-		    "mni" 'npm-mode-npm-install-save
-		    "mnl" 'npm-mode-npm-list
-		    "mnn" 'npm-mode-npm-inig
-		    "mnr" 'npm-mode-npm-run
-		    "mnu" 'npm-mode-npm-uninstall
-		    "mnv" 'npm-mode-visit-project-file
+                    "mf" 'nmuth/eslint-fix
 
 		    ;"md" 'tide-jump-to-definition
 		    ;"mi" 'tide-jump-to-implementation
@@ -108,12 +105,27 @@
 		    "mr" 'lsp-find-references
 		    "mR" 'lsp-rename)
 
+                    "mn" '(:ignore t :which-key "npm")
+                    "mnd" 'npm-mode-npm-install-save-dev
+                    "mni" 'npm-mode-npm-install-save
+                    "mnl" 'npm-mode-npm-list
+                    "mnn" 'npm-mode-npm-inig
+                    "mnr" 'npm-mode-npm-run
+                    "mnu" 'npm-mode-npm-uninstall
+                    "mnv" 'npm-mode-visit-project-file
+
+                    "md" 'lsp-find-definition
+                    "mi" 'lsp-find-implementation
+                    "mr" 'lsp-find-references
+                    "mR" 'lsp-rename
+
+                    "mS" 'lsp-restart-workspace)
+
 
 (general-define-key :states '(normal visual insert emacs)
-		    :keymaps 'tide-references-mode-map
+                    :keymaps 'tide-references-mode-map
 
-		    "RET" 'tide-goto-reference
-		    "n" 'tide-find-next-reference
-		    "p" 'tide-find-previous-reference
-		    "q" 'quit-window)
-
+                    "RET" 'tide-goto-reference
+                    "n" 'tide-find-next-reference
+                    "p" 'tide-find-previous-reference
+                    "q" 'quit-window)
