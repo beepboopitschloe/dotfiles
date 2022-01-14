@@ -1,1 +1,1 @@
-/Users/a612857/Projects/dotfiles/.vimrc
+/Users/rose/Projects/dotfiles/.vimrc

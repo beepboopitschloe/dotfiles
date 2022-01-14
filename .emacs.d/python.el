@@ -1,6 +1,6 @@
 (message "configuring python...")
 
-(defun nmuth/python-mode-hook ()
+(defun rose/python-mode-hook ()
   )
 
 (use-package anaconda-mode :ensure t

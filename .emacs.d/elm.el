@@ -1,6 +1,6 @@
 (message "configuring elm...")
 
-(defun nmuth/elm-mode-hook ()
+(defun rose/elm-mode-hook ()
   (interactive)
   (elm-oracle-setup-completion)
   (setq company-backend 'company-elm))
@@ -8,7 +8,7 @@
 (use-package elm-mode :ensure t
   :config
   (add-to-list 'company-backends 'company-elm)
-  (add-hook 'elm-mode-hook #'nmuth/elm-mode-hook)
+  (add-hook 'elm-mode-hook #'rose/elm-mode-hook)
   (setq elm-format-on-save t))
 
 (use-package flycheck-elm :ensure t

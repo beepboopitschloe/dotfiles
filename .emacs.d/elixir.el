@@ -1,17 +1,17 @@
 (message "configuring elixir...")
 
-(defun nmuth/alchemist-hook ()
+(defun rose/alchemist-hook ()
   (company-mode))
 
-(defun nmuth/iex-hook ()
+(defun rose/iex-hook ()
   (company-mode))
 
 (use-package elixir-mode :ensure t)
 (use-package alchemist :ensure t
   :config
   (add-hook 'elixir-mode-hook (lambda () (alchemist-mode)))
-  (add-hook 'alchemist-mode-hook #'nmuth/alchemist-hook)
-  (add-hook 'alchemist-iex-mode-hook #'nmuth/iex-hook))
+  (add-hook 'alchemist-mode-hook #'rose/alchemist-hook)
+  (add-hook 'alchemist-iex-mode-hook #'rose/iex-hook))
 
 (general-define-key :states '(normal visual insert emacs)
 		    :keymaps 'alchemist-mode-map
@@ -26,9 +26,9 @@
 ;;;;;;;;;
 ;; erlang
 
-(defun nmuth/load-erlang ()
+(defun rose/load-erlang ()
   (interactive)
-  (let* ((erl-path "/usr/local/Cellar/erlang/24.1/lib/erlang/")
+  (let* ((erl-path "/opt/homebrew/Cellar/erlang/24.1.4/lib/erlang/")
 	 (erl-emacs-path (concat erl-path "lib/tools-3.5.1/emacs/"))
 	 (erl-exec-path (concat erl-path "bin")))
     (setq load-path (cons erl-emacs-path load-path))
@@ -37,4 +37,4 @@
     (setq exec-path (cons erl-exec-path exec-path))
     (setq erlang-man-root-dir (concat erl-path "man"))))
 
-(nmuth/load-erlang)
+(rose/load-erlang)

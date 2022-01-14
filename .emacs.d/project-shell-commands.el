@@ -1,9 +1,9 @@
 (message "configuring project shell commands...")
 
-(defun nmuth/term-buffer-name (project)
+(defun rose/term-buffer-name (project)
   (format "*%s-term*" project))
 
-(defun nmuth/spawn-term (name &optional directory)
+(defun rose/spawn-term (name &optional directory)
   "Create a shell buffer with the given name"
   (interactive "MName of shell buffer to create: ")
   (let ((buf (get-buffer-create (generate-new-buffer-name name))))
@@ -14,18 +14,18 @@
     (process-send-string buf "echo ''\n")
     buf))
 
-(defun nmuth/project-info (&optional explicit-project)
+(defun rose/project-info (&optional explicit-project)
   (let* ((project-root (projectile-project-root))
 					;(project-path-parts (if project-root
 					;(split-string project-root "/")
 					;(error (format "bad project def: %S" project))))
 	 (project-name (projectile-project-name))
-	 (term-buffer-name (nmuth/term-buffer-name project-name)))
+	 (term-buffer-name (rose/term-buffer-name project-name)))
     (list 'name project-name 'root project-root 'term-buffer-name term-buffer-name)))
 
-(defun nmuth/find-or-open-shell-for-current-project ()
+(defun rose/find-or-open-shell-for-current-project ()
   (interactive)
-  (let* ((project (nmuth/project-info))
+  (let* ((project (rose/project-info))
 	 (project-name (plist-get project 'name))
 	 (project-root (plist-get project 'root))
 	 (buffer-name (plist-get project 'term-buffer-name))
@@ -36,14 +36,14 @@
 	  (process-send-string existing-term-buffer "echo ''\n")
 	  (pop-to-buffer existing-term-buffer))
       (progn
-	(pop-to-buffer (nmuth/spawn-term buffer-name project-root))
+	(pop-to-buffer (rose/spawn-term buffer-name project-root))
 	(cd project-root)))))
 
-(defun nmuth/project-shell-cd-to-root (&optional project-info)
+(defun rose/project-shell-cd-to-root (&optional project-info)
   (interactive)
   (let* ((project (if project-info
 		      project-info
-		    (nmuth/project-info)))
+		    (rose/project-info)))
 	 (root (plist-get project 'root))
 	 (buffer-name (plist-get project 'term-buffer-name))
 	 (buffer (get-buffer buffer-name)))
@@ -53,7 +53,7 @@
 	  (process-send-string buffer "echo ''\n"))
       (message "Buffer %s does not exist.\n" buffer-name))))
 
-(defun nmuth/shell-command-in-directory (dir cmd)
+(defun rose/shell-command-in-directory (dir cmd)
   (let ((buffer-name "*Shell Command Output*"))
     (with-current-buffer-window buffer-name nil nil
 				(princ "*------- SHELL COMMAND -------*\n")
@@ -64,36 +64,36 @@
 				(help-mode)
 				(switch-to-buffer-other-window (current-buffer)))))
 
-(defun nmuth/shell-command-in-project-root (&optional optional-cmd project-info)
+(defun rose/shell-command-in-project-root (&optional optional-cmd project-info)
   (interactive)
   (let* ((project (if project-info
 		      project-info
-		    (nmuth/project-info)))
+		    (rose/project-info)))
 	 (project-root (plist-get project 'root))
 	 (command (if optional-cmd
 		      optional-cmd
 		    (read-from-minibuffer "Command: "))))
     (message "running: 'cd %s && %s'" project-root command)
-    (nmuth/shell-command-in-directory project-root command)))
+    (rose/shell-command-in-directory project-root command)))
 
-(defun nmuth/projectile-term-at-root ()
+(defun rose/projectile-term-at-root ()
   (interactive)
   (projectile-run-term (getenv "SHELL")))
 
 (def-projectile-commander-method ?t
   "Open a terminal at project root"
-  (nmuth/projectile-term-at-root))
+  (rose/projectile-term-at-root))
 
 (general-define-key :states '(normal insert visual emacs)
 		    :prefix "SPC"
 		    :non-normal-prefix "C-c"
 
-		    "ps" 'nmuth/projectile-term-at-root
-		    "pc" 'nmuth/shell-command-in-project-root
+		    "ps" 'rose/projectile-term-at-root
+		    "pc" 'rose/shell-command-in-project-root
 		    "pC" 'projectile-commander)
 
 (general-define-key :states '(normal visual insert emacs)
 		    :keymaps 'shell-mode-map
 		    :prefix "SPC"
 		    :non-normal-prefix "C-c"
-		    "mr" 'nmuth/project-shell-cd-to-root)
+		    "mr" 'rose/project-shell-cd-to-root)

@@ -30,27 +30,27 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; C indent style
 
-(defun nmuth/setup-c-indent ()
+(defun rose/setup-c-indent ()
   (c-set-offset 'arglist-intro '+)
   (c-set-offset 'arglist-close 0)
   (c-set-offset 'statement-cont '-))
 
 (setq-default c-basic-offset 2)
-(add-hook 'c-mode-common-hook #'nmuth/setup-c-indent)
+(add-hook 'c-mode-common-hook #'rose/setup-c-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; make copy/paste work
 
-(defun nmuth/pbcopy ()
+(defun rose/pbcopy ()
   (interactive)
   (shell-command-on-region (region-beginning) (region-end) "pbcopy"))
 
-(defun nmuth/pbcut ()
+(defun rose/pbcut ()
   (interactive)
-  (nmuth/pbcopy)
+  (rose/pbcopy)
   (delete-region (region-beginning) (region-end)))
 
-(defun nmuth/pbpaste ()
+(defun rose/pbpaste ()
   (interactive)
   (let ((paste (shell-command-to-string "pbpaste")))
     (when mark-active (evil-delete (point) (mark)))
@@ -59,14 +59,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; some utility functions
 
-(defun nmuth/light-theme ()
+(defun rose/light-theme ()
   "Enable light GUI theme."
   (interactive)
   (progn
     (color-theme-initialize)
     (color-theme-feng-shui)))
 
-(defun nmuth/dark-theme ()
+(defun rose/dark-theme ()
   "Enable dark GUI theme."
   (interactive)
   (progn
@@ -76,11 +76,11 @@
     ;; (color-theme-charcoal-black)
     )) ; (color-theme-jonadabian-slate))
 
-(defun nmuth/gui-setup ()
+(defun rose/gui-setup ()
   "Perform GUI-specific setup."
   (exec-path-from-shell-initialize))
 
-(defun nmuth/toggle-indent-tabs-mode ()
+(defun rose/toggle-indent-tabs-mode ()
   "Toggle whether or not to indent with tabs."
   (interactive)
   (setq indent-tabs-mode (not indent-tabs-mode))
@@ -91,10 +91,10 @@
   (interactive)
   (message "current major mode is %s" major-mode))
 
-(defun nmuth/first-load-setup ()
+(defun rose/first-load-setup ()
   "Perform first-load setup functions."
   (when (memq window-system '(mac ns))
-    (nmuth/gui-setup)) ; set up GUI things if we're running in a GUI
+    (rose/gui-setup)) ; set up GUI things if we're running in a GUI
   (find-file "~/org/index.org"))
 
 ;; portable 'close-window
@@ -254,9 +254,9 @@
 		    :prefix "SPC"
 		    :non-normal-prefix "C-c"
 
-		    "X" 'nmuth/pbcut
-		    "C" 'nmuth/pbcopy
-		    "V" 'nmuth/pbpaste
+		    "X" 'rose/pbcut
+		    "C" 'rose/pbcopy
+		    "V" 'rose/pbpaste
 
 		    "a" '(:ignore t :which-key "applications")
 		    "as" '(:ignore t :which-key "shells")
@@ -270,10 +270,10 @@
 		    "t" '(:ignore t :which-key "misc")
 		    "tl" 'linum-mode
 		    "tw" 'whitespace-mode
-		    "t TAB" 'nmuth/toggle-indent-tabs-mode
+		    "t TAB" 'rose/toggle-indent-tabs-mode
 		    "tt" '(:ignore t :which-key "themes")
-		    "ttl" 'nmuth/light-theme
-		    "ttd" 'nmuth/dark-theme)
+		    "ttl" 'rose/light-theme
+		    "ttd" 'rose/dark-theme)
 
 (general-define-key :states '(visual insert)
 		    "ESC" 'evil-escape)
@@ -291,7 +291,7 @@
 ;;"M-x" 'counsel-M-x)
 
 ;;  web-mode creates its own faces for some stupid reason, so we have to enable the theme before it loads
-(nmuth/dark-theme)
+(rose/dark-theme)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; specific mode configuration
@@ -342,8 +342,8 @@
 (add-hook 'after-load-functions (lambda (f) (setq indent-tabs-mode nil)) t)
 
 ;; open an org file if we're starting emacs now
-(unless (boundp 'nmuth/first-startup-finished)
-  (nmuth/first-load-setup))
+(unless (boundp 'rose/first-startup-finished)
+  (rose/first-load-setup))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -358,4 +358,11 @@
  '(magit-diff-removed-highlight ((((type tty)) (:foreground "IndianRed"))))
  '(magit-section-highlight ((((type tty)) nil))))
 
-(defvar nmuth/first-startup-finished t)
+(defvar rose/first-startup-finished t)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(eslintd-fix eslintd-fix-mode cider clojure-mode ponylang-mode omnisharp racer flycheck-rust rust-mode anaconda-mode nim-mode lispy slime-company slime npm-mode web-mode tide company-go go-eldoc flycheck-elm elm-mode company-lsp evil-magit yaml-mode which-key use-package srcery-theme smart-tabs-mode shell-pop restclient restart-emacs projectile persistent-scratch nord-theme magit lua-mode lsp-ui linum-relative ledger-mode haskell-mode general exec-path-from-shell evil-escape evil-collection emojify d-mode company-dcd color-theme alchemist ag)))

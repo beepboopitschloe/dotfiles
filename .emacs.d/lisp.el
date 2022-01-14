@@ -1,4 +1,4 @@
-;;; nmuth/lisp --- Lisp configuration
+;;; rose/lisp --- Lisp configuration
 ;;; Commentary:
 
 ;;; Code:
@@ -14,19 +14,19 @@
       `((roswell ("ros" "-Q" "run"))))
 (setf slime-default-lisp 'roswell)
 
-(setq-default nmuth/lisp-modes '(clojure-mode
+(setq-default rose/lisp-modes '(clojure-mode
 				 clojurescript-mode
 				 emacs-lisp-mode
 				 lisp-mode))
 
-(defun nmuth/activate-lispy-if-lisp ()
-  "Activate Lispy f the current mode is one of nmuth/lisp-modes."
+(defun rose/activate-lispy-if-lisp ()
+  "Activate Lispy f the current mode is one of rose/lisp-modes."
   (interactive)
   (message "look at me")
-  (if (member major-mode nmuth/lisp-modes)
+  (if (member major-mode rose/lisp-modes)
       (lispy-mode 1)))
 
-(defun nmuth/deactivate-lispy ()
+(defun rose/deactivate-lispy ()
   (lispy-mode 0))
 
 (use-package slime :ensure t
@@ -36,5 +36,5 @@
 
 (use-package lispy :ensure t
   :config
-  (add-hook 'evil-insert-state-entry-hook #'nmuth/activate-lispy-if-lisp)
-  (add-hook 'evil-insert-state-exit-hook #'nmuth/deactivate-lispy))
+  (add-hook 'evil-insert-state-entry-hook #'rose/activate-lispy-if-lisp)
+  (add-hook 'evil-insert-state-exit-hook #'rose/deactivate-lispy))

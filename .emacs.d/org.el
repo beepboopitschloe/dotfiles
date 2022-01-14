@@ -1,20 +1,20 @@
 (message "configuring org mode...")
 
-(defun nmuth/org-mode-hook ()
+(defun rose/org-mode-hook ()
   (interactive)
   (linum-mode 0)) ; not working for some reason
 
-(defun nmuth/org-push ()
+(defun rose/org-push ()
   "Push org files to git repository."
   (interactive)
   (shell-command "cd ~/org && git add -A && git commit -m \"update $(date)\" && git push"))
 
-(defun nmuth/org-fetch ()
+(defun rose/org-fetch ()
   "Pull org files from git repository."
   (interactive)
   (shell-command "cd ~/org && git pull"))
 
-(defun nmuth/org-clocktable-indent-string (level)
+(defun rose/org-clocktable-indent-string (level)
   "Indent an 'org-mode' clocktable without using wacky Latex characters.
 
 LEVEL: number of spaces to offset the string."
@@ -26,43 +26,43 @@ LEVEL: number of spaces to offset the string."
         (setq str (concat str "-")))
       (concat str "> "))))
 
-(defvar nmuth/target-jira-host "https://jira.target.com")
-(defcustom nmuth/default-jira-host nmuth/target-jira-host
+(defvar rose/target-jira-host "https://jira.target.com")
+(defcustom rose/default-jira-host rose/target-jira-host
   "The default JIRA host to use when inserting links."
-  :group 'nmuth
+  :group 'rose
   :type 'variable)
 
-(defun nmuth/is-url-p (str)
+(defun rose/is-url-p (str)
   (or (string-prefix-p "http://" str) (string-prefix-p "https://" str)))
 
-(defun nmuth/ticket-number-from-jira-url (url)
+(defun rose/ticket-number-from-jira-url (url)
   (let* ((parts (split-string url "/"))
          (last-part (car (last parts))))
     last-part))
 
-(defun nmuth/org-link (url label)
+(defun rose/org-link (url label)
   (format "[[%s][%s]]" url (or label url)))
 
-(defun nmuth/jira-org-link-from-string (ticket-or-url)
-  (let* ((is-url (nmuth/is-url-p ticket-or-url))
-         (ticket-number (if is-url (nmuth/ticket-number-from-jira-url ticket-or-url) ticket-or-url))
-         (url (if is-url ticket-or-url (format "%s/browse/%s" nmuth/default-jira-host ticket-number))))
-    (nmuth/org-link url ticket-number)))
+(defun rose/jira-org-link-from-string (ticket-or-url)
+  (let* ((is-url (rose/is-url-p ticket-or-url))
+         (ticket-number (if is-url (rose/ticket-number-from-jira-url ticket-or-url) ticket-or-url))
+         (url (if is-url ticket-or-url (format "%s/browse/%s" rose/default-jira-host ticket-number))))
+    (rose/org-link url ticket-number)))
 
-(defun nmuth/add-jira-link-to-properties (ticket-or-url)
+(defun rose/add-jira-link-to-properties (ticket-or-url)
   (interactive "sIssue number or URL: ")
   (let* ((key "JIRA_TICKET")
-	 (link (nmuth/jira-org-link-from-string ticket-or-url))
+	 (link (rose/jira-org-link-from-string ticket-or-url))
 	 (current-value (org-entry-get nil key))
 	 (next-value (if current-value (format "%s %s" current-value link) link)))
     (org-set-property key next-value)))
 
-(defun nmuth/insert-jira-link (ticket-or-url)
+(defun rose/insert-jira-link (ticket-or-url)
   (interactive "sIssue number or URL: ")
-  (let* ((org-link (nmuth/jira-org-link-from-string ticket-or-url)))
+  (let* ((org-link (rose/jira-org-link-from-string ticket-or-url)))
     (insert org-link)))
 
-(defun nmuth/pp-github-issue-or-pr (raw-url)
+(defun rose/pp-github-issue-or-pr (raw-url)
   (let* ((url (url-generic-parse-url raw-url))
          (parts (split-string (url-filename url) "/"))
          (org (nth 1 parts))
@@ -71,16 +71,16 @@ LEVEL: number of spaces to offset the string."
          (entity-id (nth 4 parts)))
     (format "%s/%s#%s" org repo entity-id)))
 
-(defun nmuth/github-issue-or-pr-to-org-link (raw-url)
-  (nmuth/org-link raw-url (nmuth/pp-github-issue-or-pr raw-url)))
+(defun rose/github-issue-or-pr-to-org-link (raw-url)
+  (rose/org-link raw-url (rose/pp-github-issue-or-pr raw-url)))
 
-(defun nmuth/insert-github-issue-or-pr-link (raw-url)
+(defun rose/insert-github-issue-or-pr-link (raw-url)
   (interactive "sURL for issue or pull request: ")
-  (insert (nmuth/github-issue-or-pr-to-org-link raw-url)))
+  (insert (rose/github-issue-or-pr-to-org-link raw-url)))
 
-(defun nmuth/add-pull-request-to-properties (raw-url)
+(defun rose/add-pull-request-to-properties (raw-url)
   (interactive "sPull request URL: ")
-  (let* ((link (nmuth/github-issue-or-pr-to-org-link raw-url))
+  (let* ((link (rose/github-issue-or-pr-to-org-link raw-url))
          (current-value (org-entry-get (point) "PULL_REQUESTS"))
          (next-value (if current-value (format "%s %s" current-value link) link)))
     (org-entry-put (point) "PULL_REQUESTS" next-value)))
@@ -88,46 +88,46 @@ LEVEL: number of spaces to offset the string."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions for copying github link to the current line
 
-(defun nmuth/git-origin ()
+(defun rose/git-origin ()
   (string-trim (shell-command-to-string "git remote -v | head -n 1 | awk '{ print $2 }'")))
 
-(defun nmuth/git-current-branch ()
+(defun rose/git-current-branch ()
   (string-trim (shell-command-to-string "git rev-parse --abbrev-ref HEAD")))
 
-(defun nmuth/git-ssh-origin-to-url (ssh)
+(defun rose/git-ssh-origin-to-url (ssh)
   (let* ((without-colon (replace-regexp-in-string ":" "/" ssh))
          (without-suffix (replace-regexp-in-string "\.git$" "" without-colon))
          (without-username (replace-regexp-in-string "^git@" "https://" without-suffix)))
     without-username))
 
-(defun nmuth/github-origin-link (origin)
+(defun rose/github-origin-link (origin)
   (if (string-prefix-p "http" origin)
       origin
-    (nmuth/git-ssh-origin-to-url origin)))
+    (rose/git-ssh-origin-to-url origin)))
 
-(defun nmuth/path-to-buffer-file-in-project ()
+(defun rose/path-to-buffer-file-in-project ()
   (replace-regexp-in-string (projectile-project-root) "" buffer-file-name))
 
-(defun nmuth/get-github-link-to-point ()
-  (let* ((origin (nmuth/git-origin))
-         (branch (nmuth/git-current-branch))
-         (base-url (nmuth/github-origin-link origin))
+(defun rose/get-github-link-to-point ()
+  (let* ((origin (rose/git-origin))
+         (branch (rose/git-current-branch))
+         (base-url (rose/github-origin-link origin))
          (branch-url (format "%s/blob/%s" base-url branch))
-         (filepath (nmuth/path-to-buffer-file-in-project))
+         (filepath (rose/path-to-buffer-file-in-project))
          (line-number (line-number-at-pos)))
     (format "%s/%s\#L%d" branch-url filepath line-number)))
 
-(defun nmuth/copy-github-link-to-point ()
+(defun rose/copy-github-link-to-point ()
   (interactive)
-  (let* ((url (nmuth/get-github-link-to-point))
+  (let* ((url (rose/get-github-link-to-point))
          (cmd (format "echo %s | reattach-to-user-namespace pbcopy" url)))
     (message cmd)
     (shell-command cmd)))
 
-(defun nmuth/yank-github-org-link-to-point ()
+(defun rose/yank-github-org-link-to-point ()
   (interactive)
-  (let* ((url (nmuth/get-github-link-to-point))
-         (filepath (nmuth/path-to-buffer-file-in-project))
+  (let* ((url (rose/get-github-link-to-point))
+         (filepath (rose/path-to-buffer-file-in-project))
          (line-number (line-number-at-pos))
 	 (desc (format "%s#L%s" filepath line-number))
 	 (org-link (format "[[%s][%s]]" url desc)))
@@ -135,16 +135,16 @@ LEVEL: number of spaces to offset the string."
 
 ;; mermaid
 
-(defvar nmuth/mermaid-cmd "~/.config/yarn/global/node_modules/.bin/mmdc")
+(defvar rose/mermaid-cmd "~/.config/yarn/global/node_modules/.bin/mmdc")
 
-(defun nmuth/org-mermaid ()
+(defun rose/org-mermaid ()
   (interactive)
   (let* ((infile (make-temp-file "org-mermaid"))
          (outfile (make-temp-file "org-mermaid" nil ".png"))
          (el (org-element-at-point))
          (lang (org-element-property :language el))
          (content (org-element-property :value el))
-         (cmd (format "%s -i %s -o %s" nmuth/mermaid-cmd infile outfile)))
+         (cmd (format "%s -i %s -o %s" rose/mermaid-cmd infile outfile)))
     (if (string-equal lang "mermaid")
         (with-temp-buffer
           (message cmd)
@@ -152,9 +152,9 @@ LEVEL: number of spaces to offset the string."
           (write-file infile)
           (shell-command cmd)
           (shell-command (format "open %s" outfile)))))
-  (message "nmuth/org-mermaid can only be called on :mermaid source blocks"))
+  (message "rose/org-mermaid can only be called on :mermaid source blocks"))
 
-(defun nmuth/org-mermaid-share ()
+(defun rose/org-mermaid-share ()
   (interactive)
   (let* ((el (org-element-at-point))
          (lang (org-element-property :language el))
@@ -163,7 +163,7 @@ LEVEL: number of spaces to offset the string."
          (link (format "https://mermaidjs.github.io/mermaid-live-editor/#/view/%s" encoded)))
     (org-open-link-from-string (format "[[%s]]" link))))
 
-(add-hook 'org-mode-hook 'nmuth/org-mode-hook)
+(add-hook 'org-mode-hook 'rose/org-mode-hook)
 
 (setq org-directory "~/org")
 
@@ -239,11 +239,11 @@ LEVEL: number of spaces to offset the string."
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?")))
 
-(defun nmuth/capture-journal ()
+(defun rose/capture-journal ()
   (interactive)
   (org-capture nil "j"))
 
-(advice-add 'org-clocktable-indent-string :override #'nmuth/org-clocktable-indent-string)
+(advice-add 'org-clocktable-indent-string :override #'rose/org-clocktable-indent-string)
 
 ;; global org keybindings
 (general-define-key :states '(normal visual insert emacs)
@@ -253,13 +253,13 @@ LEVEL: number of spaces to offset the string."
                     "o" '(:ignore t :which-key "org")
                     "o a" 'org-agenda
                     "o c" 'org-capture
-                    "o j" 'nmuth/capture-journal
+                    "o j" 'rose/capture-journal
                     "o O" 'org-clock-out
                     "o l" 'org-store-link
-		    "o L C" 'nmuth/copy-github-link-to-point
-                    "o L L" 'nmuth/yank-github-org-link-to-point
-                    "o J" 'nmuth/insert-jira-link
-                    "o G" 'nmuth/insert-github-issue-or-pr-link)
+		    "o L C" 'rose/copy-github-link-to-point
+                    "o L L" 'rose/yank-github-org-link-to-point
+                    "o J" 'rose/insert-jira-link
+                    "o G" 'rose/insert-github-issue-or-pr-link)
 
 ;; org-mode specific keybindings
 (general-define-key :states '(normal visual insert emacs)
@@ -272,19 +272,19 @@ LEVEL: number of spaces to offset the string."
                     "m d" 'org-deadline
                     "m D" 'org-update-all-dblocks
 
-                    "m P" 'nmuth/org-push
-                    "m F" 'nmuth/org-fetch
+                    "m P" 'rose/org-push
+                    "m F" 'rose/org-fetch
 
                     "m I" 'org-clock-in
-                    "m m m" 'nmuth/org-mermaid
-                    "m m s" 'nmuth/org-mermaid-share
+                    "m m m" 'rose/org-mermaid
+                    "m m s" 'rose/org-mermaid-share
                     "m o" 'org-open-at-point
                     "m O" 'org-clock-out
                     "m q" 'org-fill-paragraph
 
                     "m p" '(:ignore t :which-key "heading properties")
-                    "m p j" 'nmuth/add-jira-link-to-properties
-                    "m p g" 'nmuth/add-pull-request-to-properties
+                    "m p j" 'rose/add-jira-link-to-properties
+                    "m p g" 'rose/add-pull-request-to-properties
 
                     "m s" 'org-schedule
                     "m t" 'org-todo

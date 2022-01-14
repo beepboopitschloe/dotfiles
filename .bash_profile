@@ -134,19 +134,19 @@ function mermaid() {
 # do a thing if the last command was successful
 function and() {
     if [ $? -eq 0 ]; then
-	$@
+        $@
     else
-	return 1
+        return 1
     fi
 }
 
 # print whether the previous command was successful
 function ok? {
     if [ $? -eq 0 ]; then
-	echo '🆒👀🆗'
+        echo '🆒👀🆗'
     else
-	echo '🚫🙅🚫'
-	false
+        echo '🚫🙅🚫'
+        false
     fi
 }
 
@@ -159,7 +159,7 @@ function ssh-add-assert-key() {
     loaded=$(ssh-add -L | grep "$pub")
 
     if [[ -z "$loaded" ]]; then
-	ssh-add $path
+        ssh-add $path
     fi
 }
 # friendly message
@@ -193,3 +193,8 @@ fi
 ###-tns-completion-end-###
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# Setting PATH for Python 3.9
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
+export PATH
