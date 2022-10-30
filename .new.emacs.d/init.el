@@ -4,6 +4,13 @@
 (load-file "~/.emacs.d/rose/package.el")
 (load-file "~/.emacs.d/rose/lsp.el")
 
+;;;;;;;;;;;;;;;;;;;
+;; custom functions
+
+(defun rose/switch-to-other-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
 ;;;;;;;;;;;;;;;;;
 ;; basic packages
 
@@ -38,10 +45,12 @@
                     :non-normal-prefix "C-c"
                     :keymaps 'override
 
+		    "TAB" 'rose/switch-to-other-buffer
 		    ":" 'helm-M-x
 
 		    "b" '(:ignore t :which-key "buffers")
 		    "bb" 'helm-buffers-list
+		    "be" 'eval-buffer
 
 		    "g" '(:ignore t :which-key "magit")
 		    "gb" 'magit-blame
@@ -73,6 +82,12 @@
 		    "wv" 'split-window-right
 		    "wq" 'evil-quit
 		    )
+
+;;;;;;;;;;;;;;;;
+;; last few vars
+
+(setq split-width-threshold 0)
+(setq split-height-threshold nil)
 
 ;;;;;;;;;;;;;;;;;;;
 ;; startup commands

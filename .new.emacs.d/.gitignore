@@ -5,6 +5,7 @@ elpa
 auto-save-list
 straight
 transient
+.lsp-session-v1
 
 \#*#
 .persistent-scratch
