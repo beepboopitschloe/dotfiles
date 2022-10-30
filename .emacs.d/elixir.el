@@ -28,8 +28,8 @@
 
 (defun rose/load-erlang ()
   (interactive)
-  (let* ((erl-path "/opt/homebrew/Cellar/erlang/24.1.4/lib/erlang/")
-	 (erl-emacs-path (concat erl-path "lib/tools-3.5.1/emacs/"))
+  (let* ((erl-path "/opt/homebrew/Cellar/erlang/24.3.4/lib/erlang/")
+	 (erl-emacs-path (concat erl-path "lib/tools-3.5.2/emacs/"))
 	 (erl-exec-path (concat erl-path "bin")))
     (setq load-path (cons erl-emacs-path load-path))
     (require 'erlang-start)

@@ -24,6 +24,7 @@
 (setq create-lockfiles nil)
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
+(setq standard-indent 2)
 
 (setq-default fill-column 80)
 
@@ -312,6 +313,7 @@
 (load-file "~/.emacs.d/project-shell-commands.el")
 (load-file "~/.emacs.d/pony.el")
 (load-file "~/.emacs.d/lsp.el")
+(load-file "~/.emacs.d/hurl.el")
 
 (use-package clojure-mode :ensure t)
 (use-package cider :ensure t)
@@ -364,5 +366,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(eslintd-fix eslintd-fix-mode cider clojure-mode ponylang-mode omnisharp racer flycheck-rust rust-mode anaconda-mode nim-mode lispy slime-company slime npm-mode web-mode tide company-go go-eldoc flycheck-elm elm-mode company-lsp evil-magit yaml-mode which-key use-package srcery-theme smart-tabs-mode shell-pop restclient restart-emacs projectile persistent-scratch nord-theme magit lua-mode lsp-ui linum-relative ledger-mode haskell-mode general exec-path-from-shell evil-escape evil-collection emojify d-mode company-dcd color-theme alchemist ag)))
+   '(ccls lsp-mode eg quelpa-use-package undo-redo undo-redu eslintd-fix eslintd-fix-mode cider clojure-mode ponylang-mode omnisharp racer flycheck-rust rust-mode anaconda-mode nim-mode lispy slime-company slime npm-mode web-mode tide company-go go-eldoc flycheck-elm elm-mode company-lsp evil-magit yaml-mode which-key use-package srcery-theme smart-tabs-mode shell-pop restclient restart-emacs projectile persistent-scratch nord-theme magit lua-mode lsp-ui linum-relative ledger-mode haskell-mode general exec-path-from-shell evil-escape evil-collection emojify d-mode company-dcd color-theme alchemist ag))
+ '(web-mode-code-indent-offset 2))

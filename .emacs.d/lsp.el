@@ -9,6 +9,28 @@
 (use-package lsp-ui :ensure t)
 (use-package company-lsp :ensure t)
 
+;;  prisma
+(use-package quelpa-use-package
+  :ensure t
+  :init (setq quelpa-update-melpa-p nil)
+  :config (quelpa-use-package-activate-advice))
+
+(use-package prisma-mode
+  :ensure t
+  :quelpa (eg
+           :fetcher github
+           :repo "pimeys/emacs-prisma-mode")
+  :config
+  (add-hook 'prisma-mode-hook 'lsp))
+
+(with-eval-after-load 'lsp-volar
+  (setq lsp-typescript-tsdk (file-name-directory (lsp-volar-get-typescript-server-path))))
+
+(advice-add 'json-parse-string :around 
+            (lambda (orig string &rest rest)
+              (apply orig (s-replace "\\u0000" "" string)
+                     rest)))
+
 ;; wip
 '(general-define-key :states '(normal visual insert emacs)
                      :keymaps 'lsp-mode-map

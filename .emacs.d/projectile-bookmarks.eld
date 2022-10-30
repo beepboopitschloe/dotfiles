@@ -1,1 +1,1 @@
-("~/Projects/dotfiles/" "~/Projects/instil/client/" "~/Library/Caches/typescript/4.4/node_modules/@types/voca/" "~/Projects/instil/services/")
+("~/Projects/dun-ui/" "~/Projects/dotfiles/" "~/Projects/remix-dun/" "~/Projects/instil/services/" "~/Projects/instil/client/" "~/Projects/learnswr/" "~/Projects/instil/core-aws/" "~/Library/Caches/typescript/4.4/node_modules/@types/voca/" "~/Projects/angel/")

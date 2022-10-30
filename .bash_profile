@@ -25,7 +25,7 @@ term_is_emacs=$([[ $TERM = "eterm-color" ]])
 alias reload="source ~/.bash_profile"
 
 # pretty command prompt
-export PS1="$COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
+export PS1="$(date '+%H:%M:%S') $COLOR_GREEN\u@\h: $COLOR_BLUE\W$COLOR_NC\$ "
 
 # folders
 export PRET=~/Projects

@@ -254,6 +254,7 @@ LEVEL: number of spaces to offset the string."
                     "o a" 'org-agenda
                     "o c" 'org-capture
                     "o j" 'rose/capture-journal
+                    "o o" 'org-open-at-point
                     "o O" 'org-clock-out
                     "o l" 'org-store-link
 		    "o L C" 'rose/copy-github-link-to-point
