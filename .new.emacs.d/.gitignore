@@ -1,0 +1,10 @@
+*~
+
+.cache
+elpa
+auto-save-list
+straight
+transient
+
+\#*#
+.persistent-scratch
