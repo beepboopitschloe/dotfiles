@@ -15,7 +15,12 @@
 (use-package magit :ensure t)
 (use-package company :ensure t :straight t)
 (use-package which-key :ensure t :straight t)
-
+(use-package projectile :ensure t
+  :config
+  (setq projectile-completion-system 'helm)
+  (setq projectile-switch-project-action 'projectile-dired)
+  (setq projectile-mode-line '(:eval (format " Projectile[%s]" (projectile-project-name)))))
+(use-package helm-projectile :straight t :ensure t)
 
 ;;;;;;;
 ;; helm
@@ -50,8 +55,15 @@
 		    "kb" 'kill-this-buffer
 		    "kw" 'kill-buffer-and-window
 
+		    "p" '(:ignore t :which-key "projectile")
+		    "pa" 'helm-projectile-ag
+		    "pb" 'helm-projectile-switch-to-buffer
+		    "pd" 'helm-projectile-find-dir
+		    "pf" 'helm-projectile
+		    "pp" 'helm-projectile-switch-project
+
 		    "q" '(:ignore t :which-key "quit")
-		    "qr" 'restart-emacs
+		    "qq" 'kill-emacs
 
 		    "w" '(:ignore t :which-key "windows")
 		    "wj" 'evil-window-down
@@ -67,8 +79,9 @@
 
 (evil-mode)
 (which-key-mode)
-(company-mode)
-(flycheck-mode)
+(projectile-global-mode +1)
+(global-company-mode)
+(global-flycheck-mode)
 
 ;; turn off some default stuff that i hate
 (tool-bar-mode 0)
