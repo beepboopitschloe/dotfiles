@@ -88,7 +88,9 @@
 
 (setq split-width-threshold 0)
 (setq split-height-threshold nil)
+(setq standard-indent 2)
 (setq-default indent-tabs-mode nil)
+(setq-default fill-column 80)
 
 ;;;;;;;;;;;;;;;;;;;
 ;; startup commands

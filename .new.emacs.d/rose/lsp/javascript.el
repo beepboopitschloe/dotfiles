@@ -3,6 +3,7 @@
   (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (setq flycheck-javascript-eslint-executable "eslint_d")
+  (setq js-indent-level 2)
   (company-mode +1)
   (eslintd-fix-mode))
 
