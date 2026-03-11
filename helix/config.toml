@@ -1,0 +1,30 @@
+[editor]
+text-width = 127
+rulers = [80, 127]
+clipboard-provider = "pasteboard"
+
+[keys.normal]
+C-e = "scroll_down"
+C-y = "scroll_up"
+
+"A-[" = "jump_backward"
+"A-]" = "jump_forward"
+
+C-n = "extend_search_next"
+
+[keys.normal.space]
+"F" = "file_picker_in_current_buffer_directory"
+"l" = { r = ":lsp-restart" }
+
+[keys.normal.g]
+
+"q" = ":reflow"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
