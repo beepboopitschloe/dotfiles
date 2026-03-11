@@ -1,5 +1,3 @@
-source ~/.env_vars.sh
-
 path+=("$HOME/Projects/dotfiles/bin")
 export PATH
 
@@ -39,6 +37,11 @@ activate_poetry_env_if_present
 if [[ -f ~/.ssh/id_rsa ]]; then
     ssh-add-assert-key ~/.ssh/id_rsa
 fi
+
+if [[ -f ~/.ssh/id_ed25519 ]]; then
+    ssh-add-assert-key ~/.ssh/id_ed25519
+fi
+
 
 
 # bun completions
