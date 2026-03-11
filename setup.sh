@@ -10,6 +10,7 @@ ln -nfs $(pwd)/.spacemacs ~/.spacemacs
 ln -nfs $(pwd)/.emacs.d ~/.emacs.d
 ln -nfs $(pwd)/layers ~/.emacs.d/private
 ln -nfs $(pwd)/.hyper.js ~/.hyper.js
+ln -nfs $(pwd)/.zshrc ~/.zshrc
 
 # make sure that .env_vars exists (it gets sourced by the bash profile)
 touch ~/.env_vars.sh

@@ -6,7 +6,11 @@
   :ensure t
   :init (setq lsp-keymap-prefix "C-l")
   :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+  :commands lsp
+  :config
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\build\\")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\node_modules\\")
+  )
 (use-package lsp-ui :straight t :ensure t :commands lsp-ui-mode)
 (use-package helm-lsp :straight t :ensure t :commands helm-lsp-workspace-symbol)
 
@@ -26,4 +30,7 @@
 ;;;;;;;;;;;;;
 ;; dependents
 
+(load-file "~/.emacs.d/rose/lsp/elixir.el")
 (load-file "~/.emacs.d/rose/lsp/javascript.el")
+(load-file "~/.emacs.d/rose/lsp/prisma.el")
+(load-file "~/.emacs.d/rose/lsp/go.el")

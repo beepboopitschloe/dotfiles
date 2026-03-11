@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# Resolve repo path
+REPO="${1:-$PWD}"
+REPO=$(cd "$REPO" && pwd)
+
+# Validate it's a git repo
+if ! git -C "$REPO" rev-parse --git-dir &>/dev/null; then
+    echo "Error: '$REPO' is not a git repository"
+    exit 1
+fi
+
+REPO_NAME=$(basename "$REPO")
+
+# Keep .worktrees/ out of git status (local exclude, not tracked .gitignore)
+EXCLUDE="$REPO/.git/info/exclude"
+grep -qxF '.worktrees/' "$EXCLUDE" 2>/dev/null || echo '.worktrees/' >> "$EXCLUDE"
+
+# Prompt for branch name
+read -e -p "Enter branch name: " BRANCH
+
+if [ -z "$BRANCH" ]; then
+    echo "Error: branch name cannot be empty"
+    exit 1
+fi
+
+WORKTREE="$REPO/.worktrees/$BRANCH"
+
+# Session name (replace / with - for tmux safety)
+SESSION="$REPO_NAME-${BRANCH//\//-}"
+
+# Helper: attach or switch depending on whether we're already in tmux
+tmux_switch() {
+    if [ -n "$TMUX" ]; then
+        tmux switch-client -t "$1"
+    else
+        tmux attach-session -t "$1"
+    fi
+}
+
+# Create or reuse session
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Session '$SESSION' already exists. Attaching..."
+    tmux_switch "$SESSION"
+    exit 0
+fi
+
+# Create worktree if it doesn't exist
+if [ ! -d "$WORKTREE" ]; then
+    mkdir -p "$(dirname "$WORKTREE")"
+    git -C "$REPO" worktree add -b "$BRANCH" "$WORKTREE"
+    echo "Created worktree '$WORKTREE'."
+    # Symlink .env files from root into worktree
+    for f in "$REPO"/.env*; do
+        [ -f "$f" ] && ln -sf "$f" "$WORKTREE/$(basename "$f")" && echo "  Linked $(basename "$f")"
+    done
+else
+    echo "Worktree '$WORKTREE' already exists. Reusing."
+fi
+
+# Create new session in the worktree directory
+tmux new-session -d -s "$SESSION" -c "$WORKTREE"
+
+# Window 0: lazygit
+tmux rename-window -t "$SESSION:0" "lazygit"
+tmux send-keys -t "$SESSION:0" "lazygit" C-m
+
+# Window 1: hx (66%) + shell split
+tmux new-window -t "$SESSION:1" -n "editor" -c "$WORKTREE"
+tmux send-keys -t "$SESSION:1" "hx" C-m
+tmux split-window -t "$SESSION:1" -v -p 34 -c "$WORKTREE"
+tmux select-pane -t "$SESSION:1.0"
+
+# Window 2: claude
+tmux new-window -t "$SESSION:2" -n "claude" -c "$WORKTREE"
+tmux send-keys -t "$SESSION:2" "claude" C-m
+
+# Window 3: empty services window
+tmux new-window -t "$SESSION:3" -n "services" -c "$WORKTREE"
+
+# Select window 1 (editor) as starting point
+tmux select-window -t "$SESSION:1"
+
+# Attach to the session
+tmux_switch "$SESSION"

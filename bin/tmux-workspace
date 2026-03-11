@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Prompt for directory if not provided
+if [ -z "$1" ]; then
+    read -e -p "Enter project directory: " PROJECT_DIR
+    PROJECT_DIR="${PROJECT_DIR/#\~/$HOME}"  # Expand ~ to home directory
+else
+    PROJECT_DIR="$1"
+fi
+
+# Validate directory exists
+if [ ! -d "$PROJECT_DIR" ]; then
+    echo "Error: Directory '$PROJECT_DIR' does not exist"
+    exit 1
+fi
+
+# Convert to absolute path
+PROJECT_DIR=$(cd "$PROJECT_DIR" && pwd)
+
+# Use directory name as session name
+SESSION=$(basename "$PROJECT_DIR")
+
+# Helper: attach or switch depending on whether we're already in tmux
+tmux_switch() {
+    if [ -n "$TMUX" ]; then
+        tmux switch-client -t "$1"
+    else
+        tmux attach-session -t "$1"
+    fi
+}
+
+# Create or reuse session
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Session '$SESSION' already exists. Attaching..."
+    tmux_switch "$SESSION"
+    exit 0
+fi
+
+# Create new session in the project directory
+tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR"
+
+# Window 0: lazygit
+tmux rename-window -t "$SESSION:0" "lazygit"
+tmux send-keys -t "$SESSION:0" "lazygit" C-m
+
+# Window 1: hx (66%) + shell split
+tmux new-window -t "$SESSION:1" -n "editor" -c "$PROJECT_DIR"
+tmux send-keys -t "$SESSION:1" "hx" C-m
+tmux split-window -t "$SESSION:1" -v -p 34 -c "$PROJECT_DIR"
+tmux select-pane -t "$SESSION:1.0"
+
+# Window 2: claude
+tmux new-window -t "$SESSION:2" -n "claude" -c "$PROJECT_DIR"
+tmux send-keys -t "$SESSION:2" "claude" C-m
+
+# Window 3: empty services window
+tmux new-window -t "$SESSION:3" -n "services" -c "$PROJECT_DIR"
+
+# Select window 1 (editor) as starting point
+tmux select-window -t "$SESSION:1"
+
+# Attach to the session
+tmux_switch "$SESSION"

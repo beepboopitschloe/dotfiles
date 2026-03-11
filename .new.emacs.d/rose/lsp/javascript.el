@@ -12,6 +12,8 @@
 (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . js-mode))
 (add-hook 'js-mode-hook 'rose/js-lsp-setup)
 
+(setq css-indent-offset 2)
+
 ;;;;;;;;;;;;;;;;
 ;; install stuff
 

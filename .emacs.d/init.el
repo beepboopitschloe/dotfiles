@@ -143,6 +143,7 @@
   :config
   (editorconfig-mode 1))
 (use-package string-inflection :ensure t)
+(use-package yasnippet :straight t :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages that require configuration

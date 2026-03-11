@@ -28,12 +28,41 @@
   (setq projectile-switch-project-action 'projectile-dired)
   (setq projectile-mode-line '(:eval (format " Projectile[%s]" (projectile-project-name)))))
 (use-package helm-projectile :straight t :ensure t)
+(use-package yasnippet
+  :straight t
+  :ensure t
+  :config
+  (yas-global-mode))
 
 ;;;;;;;
 ;; helm
 
 (use-package helm
   :straight t)
+
+;;;;;;;;;;
+;; theming
+
+(defun rose/light-theme ()
+  "Enable light GUI theme."
+  (interactive)
+  (progn
+    (color-theme-initialize)
+    (color-theme-feng-shui)))
+
+(defun rose/dark-theme ()
+  "Enable dark GUI theme."
+  (interactive)
+  (progn
+    ; (load-theme 'tango-dark t)
+    ; (set-face-foreground 'font-lock-comment-face "cyan")
+    ;; (color-theme-initialize)
+    ;; (color-theme-charcoal-black)
+    )) ; (color-theme-jonadabian-slate))
+
+(defun rose/gui-setup ()
+  "Perform GUI-specific setup."
+  (exec-path-from-shell-initialize))
 
 ;;;;;;;;;;
 ;; general
@@ -81,6 +110,10 @@
 		    "wh" 'evil-window-left
 		    "wv" 'split-window-right
 		    "wq" 'evil-quit
+
+		    "tt" '(:ignore t :which-key "themes")
+		    "ttl" 'rose/light-theme
+		    "ttd" 'rose/dark-theme
 		    )
 
 ;;;;;;;;;;;;;;;;
@@ -91,6 +124,8 @@
 (setq standard-indent 2)
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 80)
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+(setq backup-by-copying t)
 
 ;;;;;;;;;;;;;;;;;;;
 ;; startup commands

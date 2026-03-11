@@ -97,11 +97,6 @@ function punblock() {
     echo $(sudo pfctl -sr)
 }
 
-# pretty-print json output
-alias json='python -m json.tool'
-
-alias alert='say -v victoria for the honor of greyskull'
-
 # curl shortcuts
 function curl-get() {
     curl -X GET -H "Content-Type: application/json" $@
@@ -178,23 +173,14 @@ PATH="/usr/local/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 . "$(brew --prefix nvm)/nvm.sh"
 
-function org_push {
-    echo '(cd ~/org && git add -A && git commit -m "updated $(time)" && git push)'
-}
 
-function org_fetch {
-    (cd ~/org && git pull)
-}
+# Created by `pipx` on 2023-11-03 21:30:50
+export PATH="$PATH:/Users/rose/.local/bin"
 
-###-tns-completion-start-###
-if [ -f /Users/noah.muth/.tnsrc ]; then
-    source /Users/noah.muth/.tnsrc
-fi
-###-tns-completion-end-###
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init.bash 2>/dev/null || :
 
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# Setting PATH for Python 3.9
-# The original version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
-export PATH
+alias ptf="pytest -f"
+alias pt=pytest
+. "$HOME/.cargo/env"
